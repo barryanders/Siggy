@@ -42,14 +42,21 @@ Because browser storage is local, download backup copies of important signatures
 
 - 100 premade email signature card designs
 - 18 searchable design categories
-- Search and category filtering
+- Search, category filtering, hide included designs, and restore included designs
 - Editable name, title, company, photo URL, logo/text, email, phone, website, location, and tagline
+- 48 built-in 3D avatar choices for quick previews, including people, animals, sports, cultures, medical roles, artists, adventurers, and niche professions
+- Drag-and-drop local image previews stored only in your browser
 - Accent color customization
 - Photo shape controls
+- Design presets for compact, balanced, roomy, bold, soft, and slim cards
+- Advanced controls for width, text scale, padding, corner radius, borders, card color, text color, and font family
 - Locked light, locked dark, or email-client-controlled color behavior
+- Shuffle card generator for quickly trying different layouts, avatars, details, and presets
+- Save, load, and delete local card drafts
 - Table-based inline HTML output for email-client compatibility
 - Copy formatted signature for email clients that accept rich paste
 - Copy raw HTML
+- Download the current signature as an HTML file
 - JSON export and import for local backups
 - Single standalone HTML file
 - No account
@@ -89,9 +96,9 @@ You can also open `index.html` directly in a browser.
 
 ## Image Notes
 
-SignaCard lets users provide remote image URLs for a profile photo or logo. This is more reliable than embedding decorative images directly in the generated signature because many email clients block images, strip data URLs, or alter image rendering in dark mode.
+SignaCard lets users provide remote image URLs for a profile photo or logo. It also includes a 3D avatar library and supports drag-and-drop local image previews for testing. Local uploads are stored in browser storage only, so they help you see the layout but are not hosted for email recipients.
 
-For best results, use HTTPS image URLs and test the signature in your actual email client before sending.
+For best results, use HTTPS image URLs and test the signature in your actual email client before sending. Localhost and browser-stored images are preview aids, not production-hosted email images.
 
 ## Why SignaCard Exists
 

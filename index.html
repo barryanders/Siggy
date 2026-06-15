@@ -6,7 +6,7 @@
   <title>SignaCard - Email Signature Card Builder</title>
   <meta name="description" content="SignaCard is a free local email signature card builder for creating customizable HTML email signatures with business-card style templates.">
   <meta name="robots" content="index,follow">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23111827'/%3E%3Cpath d='M14 20h36v24H14z' fill='%23fff'/%3E%3Cpath d='M14 20l18 14 18-14' fill='none' stroke='%23f4c763' stroke-width='5' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="icon" href="assets/icons/signacard-mascot.png">
   <style>
     :root {
       --bg: #f5f6f8;
@@ -52,6 +52,19 @@
     button {
       border: 0;
       cursor: pointer;
+    }
+    button,
+    .template-card,
+    .avatar-option,
+    .saved-card,
+    .drop-zone {
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    }
+    button:hover,
+    .template-card:hover,
+    .avatar-option:hover,
+    .saved-card:hover {
+      transform: translateY(-1px);
     }
     .app {
       display: grid;
@@ -102,14 +115,16 @@
       width: 46px;
       height: 46px;
       border-radius: 14px;
-      background: #111827;
-      color: #ffffff;
-      display: grid;
-      place-items: center;
-      font-weight: 900;
-      letter-spacing: -0.08em;
+      background: #fff4d7;
+      overflow: hidden;
       box-shadow: 0 12px 26px rgba(15, 23, 42, 0.18);
       flex: 0 0 auto;
+    }
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
     }
     .brand-title {
       margin: 0;
@@ -153,6 +168,10 @@
     .btn.primary {
       background: var(--accent);
       color: var(--panel);
+    }
+    .btn.danger {
+      background: #fee2e2;
+      color: #991b1b;
     }
     .btn.coffee {
       background: var(--coffee);
@@ -230,21 +249,40 @@
       font-size: 12px;
       line-height: 1.35;
     }
+    .template-card {
+      position: relative;
+    }
+    .template-card-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .mini-action {
+      min-height: 28px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      padding: 0 9px;
+    }
     .mini-preview {
-      height: 78px;
+      height: 86px;
       border-radius: 10px;
       overflow: hidden;
       background: #ffffff;
       border: 1px solid rgba(15, 23, 42, 0.1);
-      display: grid;
-      place-items: center;
+      position: relative;
       transform: translateZ(0);
     }
-    .swatch {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      background: #ffffff;
+    .mini-preview-inner {
+      position: absolute;
+      left: 10px;
+      top: 10px;
+      width: 650px;
+      transform: scale(0.42);
+      transform-origin: top left;
+      pointer-events: none;
     }
     .swatch-photo {
       position: absolute;
@@ -491,6 +529,118 @@
       max-width: 100%;
       background: transparent;
     }
+    .subsection {
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      margin-top: 4px;
+      display: grid;
+      gap: 14px;
+    }
+    .subsection summary {
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .field-row output {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      min-width: 58px;
+      text-align: right;
+    }
+    .field input[type="range"] {
+      padding: 0;
+      min-height: 28px;
+    }
+    .preset-grid,
+    .avatar-grid,
+    .saved-list {
+      display: grid;
+      gap: 8px;
+    }
+    .preset-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .preset {
+      min-height: 38px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel-strong);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .preset.active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 16%, transparent);
+    }
+    .avatar-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .avatar-option {
+      aspect-ratio: 1;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      background: var(--soft);
+      padding: 0;
+      overflow: hidden;
+    }
+    .avatar-option.active {
+      border-color: var(--accent);
+    }
+    .avatar-option img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+    }
+    .drop-zone {
+      border: 2px dashed var(--line);
+      border-radius: 14px;
+      background: var(--panel-strong);
+      min-height: 96px;
+      padding: 14px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 800;
+    }
+    .drop-zone.dragging {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 8%, var(--panel-strong));
+    }
+    .saved-card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel-strong);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+    .saved-card-title {
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .saved-card-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .saved-card-actions .btn {
+      min-height: 32px;
+      padding: 0 10px;
+      font-size: 12px;
+    }
     .form-grid {
       display: grid;
       gap: 14px;
@@ -691,13 +841,14 @@
     <aside class="sidebar" id="templates-panel">
       <div class="section-title-row">
         <h2 class="section-title">Card Designs</h2>
-        <span class="count-pill">100 designs</span>
+        <span class="count-pill" id="design-count">100 designs</span>
       </div>
       <div class="design-tools">
-        <input id="design-search" type="search" placeholder="Search 100 designs">
+        <input id="design-search" type="search" placeholder="Find a design">
         <select id="category-filter" aria-label="Filter designs by category">
           <option value="all">All categories</option>
         </select>
+        <button class="btn" type="button" id="restore-designs">Restore included designs</button>
       </div>
       <div class="template-list" id="template-list"></div>
     </aside>
@@ -705,7 +856,7 @@
     <main class="workspace">
       <header class="topbar">
         <div class="brand">
-          <div class="brand-mark" aria-hidden="true">SC</div>
+          <div class="brand-mark" aria-hidden="true"><img src="assets/icons/signacard-mascot.png" alt=""></div>
           <div>
             <h1 class="brand-title">SignaCard</h1>
             <p class="brand-subtitle">Email signature cards</p>
@@ -714,6 +865,8 @@
         <div class="top-actions">
           <button class="btn" type="button" id="export-json">Backup</button>
           <button class="btn" type="button" id="import-json">Import</button>
+          <button class="btn" type="button" id="download-html">Download</button>
+          <button class="btn coffee" type="button" id="shuffle-card">Shuffle</button>
           <button class="btn" type="button" id="copy-html" title="Copy HTML">HTML</button>
           <button class="btn primary" type="button" id="copy-rich">Copy</button>
         </div>
@@ -751,8 +904,17 @@
           <input id="company" name="company">
         </div>
         <div class="field">
-          <label for="photo">Photo URL</label>
+          <label for="photo">Hosted Photo URL</label>
           <input id="photo" name="photo" inputmode="url">
+        </div>
+        <div class="field">
+          <label>3D Avatar Library</label>
+          <div class="avatar-grid" id="avatar-grid"></div>
+        </div>
+        <div class="field">
+          <label for="photo-upload">Drag in a test image</label>
+          <div class="drop-zone" id="drop-zone" tabindex="0">Drop an image here or click to upload. Local images are stored in this browser for preview only; email recipients will not see them until you host the image and use its URL.</div>
+          <input class="hidden-file" type="file" accept="image/*" id="photo-upload">
         </div>
         <div class="field">
           <label for="logo">Logo URL or Text</label>
@@ -805,6 +967,82 @@
             <option value="square">Square</option>
           </select>
         </div>
+        <div class="field">
+          <label>Design Presets</label>
+          <div class="preset-grid" id="design-presets"></div>
+        </div>
+        <div class="two">
+          <div class="field">
+            <label for="cardWidth">Card Width</label>
+            <div class="field-row"><input id="cardWidth" name="cardWidth" type="range" min="480" max="760" step="10"><output id="cardWidthOut"></output></div>
+          </div>
+          <div class="field">
+            <label for="fontScale">Text Size</label>
+            <div class="field-row"><input id="fontScale" name="fontScale" type="range" min="85" max="120" step="1"><output id="fontScaleOut"></output></div>
+          </div>
+        </div>
+        <div class="two">
+          <button class="btn" type="button" id="save-card">Save Card</button>
+          <button class="btn" type="button" id="reset-card">Reset</button>
+        </div>
+        <details class="subsection">
+          <summary>Advanced design</summary>
+          <div class="two">
+            <div class="field">
+              <label for="paddingScale">Padding</label>
+              <div class="field-row"><input id="paddingScale" name="paddingScale" type="range" min="75" max="135" step="5"><output id="paddingScaleOut"></output></div>
+            </div>
+            <div class="field">
+              <label for="radius">Corners</label>
+              <div class="field-row"><input id="radius" name="radius" type="range" min="0" max="36" step="2"><output id="radiusOut"></output></div>
+            </div>
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="borderWidth">Border</label>
+              <div class="field-row"><input id="borderWidth" name="borderWidth" type="range" min="0" max="6" step="1"><output id="borderWidthOut"></output></div>
+            </div>
+            <div class="field">
+              <label for="borderStyle">Border Style</label>
+              <select id="borderStyle" name="borderStyle">
+                <option value="solid">Solid</option>
+                <option value="dashed">Dashed</option>
+                <option value="double">Double</option>
+              </select>
+            </div>
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="borderColor">Border Color</label>
+              <input id="borderColor" name="borderColor" type="color">
+            </div>
+            <div class="field">
+              <label for="cardBg">Card Color</label>
+              <input id="cardBg" name="cardBg" type="color">
+            </div>
+          </div>
+          <div class="two">
+            <div class="field">
+              <label for="textColor">Text Color</label>
+              <input id="textColor" name="textColor" type="color">
+            </div>
+            <div class="field">
+              <label for="fontFamily">Font</label>
+              <select id="fontFamily" name="fontFamily">
+                <option value="Arial, Helvetica, sans-serif">Clean Sans</option>
+                <option value="Georgia, 'Times New Roman', serif">Editorial Serif</option>
+                <option value="'Courier New', Courier, monospace">Mono</option>
+                <option value="Verdana, Geneva, sans-serif">Friendly Sans</option>
+              </select>
+            </div>
+          </div>
+        </details>
+        <div class="subsection">
+          <div class="section-title-row">
+            <h3 class="section-title">Saved Cards</h3>
+          </div>
+          <div class="saved-list" id="saved-list"></div>
+        </div>
         <p class="hint">Signatures are exported as inline, table-based HTML. Locked modes use explicit colors so your signature does not change just because the viewer uses dark mode.</p>
       </form>
       <input class="hidden-file" type="file" accept="application/json" id="json-file">
@@ -820,8 +1058,28 @@
 
   <script>
     const STORAGE_KEY = 'signacard.v2';
-    const transparentPixel = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
-    const defaultPhoto = '';
+    const STATE_VERSION = 3;
+    const SAVED_KEY = 'signacard.savedCards.v1';
+    const HIDDEN_DESIGNS_KEY = 'signacard.hiddenDesigns.v1';
+    const transparentPixel = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3Crect width="1" height="1" fill="transparent"/%3E%3C/svg%3E';
+    const avatarPaths = Array.from({ length: 48 }, (_, index) => `assets/avatars/avatar-${index + 1}.png`);
+    const defaultPhoto = avatarPaths[0];
+    const designPresets = {
+      balanced: { label: 'Balanced', cardWidth: 620, fontScale: 100, paddingScale: 100, radius: 18, borderWidth: 1 },
+      compact: { label: 'Compact', cardWidth: 540, fontScale: 92, paddingScale: 85, radius: 14, borderWidth: 1 },
+      roomy: { label: 'Roomy', cardWidth: 700, fontScale: 108, paddingScale: 120, radius: 24, borderWidth: 1 },
+      bold: { label: 'Bold', cardWidth: 650, fontScale: 112, paddingScale: 105, radius: 16, borderWidth: 2 },
+      soft: { label: 'Soft', cardWidth: 610, fontScale: 98, paddingScale: 112, radius: 28, borderWidth: 1 },
+      slim: { label: 'Slim', cardWidth: 500, fontScale: 90, paddingScale: 80, radius: 10, borderWidth: 1 }
+    };
+    const randomPeople = [
+      ['Avery Stone', 'Brand Strategist', 'Brightline Studio', 'avery@brightline.example', '(555) 014-2201', 'brightline.example'],
+      ['Maya Brooks', 'Client Success Lead', 'Orbit Works', 'maya@orbit.example', '(555) 018-3479', 'orbit.example'],
+      ['Elliot Chen', 'Product Designer', 'North Loop Labs', 'elliot@northloop.example', '(555) 013-8820', 'northloop.example'],
+      ['Sam Rivera', 'Operations Manager', 'Fieldmark Co.', 'sam@fieldmark.example', '(555) 011-7306', 'fieldmark.example'],
+      ['Priya Hart', 'Founder', 'Kindred Office', 'priya@kindred.example', '(555) 017-4028', 'kindred.example'],
+      ['Noah Bennett', 'Technical Director', 'Signal Foundry', 'noah@signal.example', '(555) 016-1194', 'signal.example']
+    ];
 
     const templates = [
       { id: 'slate-band', name: 'Slate Band', category: 'Executive', family: 'band', note: 'Executive identity card with a bold company strip.', accent: '#ef5b49', mode: 'locked-dark' },
@@ -943,10 +1201,25 @@
       tagline: 'Clear communication, thoughtful design, and useful work for people who need it.',
       accent: '#ef5b49',
       colorMode: 'locked-dark',
-      photoStyle: 'template'
+      photoStyle: 'template',
+      preset: 'balanced',
+      cardWidth: 620,
+      fontScale: 100,
+      paddingScale: 100,
+      radius: 18,
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: '#3f3f46',
+      cardBg: '#111214',
+      textColor: '#ffffff',
+      fontFamily: 'Arial, Helvetica, sans-serif',
+      photoSource: 'avatar',
+      stateVersion: STATE_VERSION
     };
 
     let state = loadState();
+    let savedCards = loadJson(SAVED_KEY, []);
+    let hiddenDesigns = loadJson(HIDDEN_DESIGNS_KEY, []);
     let designSearch = '';
     let categoryFilter = 'all';
 
@@ -958,7 +1231,14 @@
     const safeUrl = (value, fallback = '') => {
       const raw = String(value || '').trim();
       if (!raw) return fallback;
-      if (/^(https?:|mailto:|tel:|data:image\/)/i.test(raw)) return raw;
+      if (/^(https?:|mailto:|tel:|data:image\/|blob:)/i.test(raw)) return raw;
+      if (/^(assets\/|\.\/|\/)/i.test(raw)) {
+        try {
+          return new URL(raw, window.location.href).href;
+        } catch {
+          return raw;
+        }
+      }
       return `https://${raw}`;
     };
     const hexToRgb = (hex) => {
@@ -972,9 +1252,24 @@
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     };
 
+    function loadJson(key, fallback) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(key) || 'null');
+        return parsed ?? fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
     function loadState() {
       try {
-        return { ...defaultState, ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') };
+        const loaded = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+        const merged = { ...defaultState, ...loaded, stateVersion: STATE_VERSION };
+        if (loaded.stateVersion !== STATE_VERSION) {
+          const tpl = templates.find(t => t.id === merged.template) || templates[0];
+          Object.assign(merged, templateDesignDefaults(tpl));
+        }
+        return merged;
       } catch {
         return { ...defaultState };
       }
@@ -984,19 +1279,29 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
+    function saveSavedCards() {
+      localStorage.setItem(SAVED_KEY, JSON.stringify(savedCards));
+    }
+
+    function saveHiddenDesigns() {
+      localStorage.setItem(HIDDEN_DESIGNS_KEY, JSON.stringify(hiddenDesigns));
+    }
+
     function colors() {
       const template = templates.find(t => t.id === state.template) || templates[0];
       const mode = state.colorMode || template.mode || 'locked-light';
       const dark = mode === 'locked-dark';
+      const customText = state.textColor || (dark ? '#ffffff' : '#111827');
+      const customBg = state.cardBg || (dark ? '#111214' : '#ffffff');
       if (mode === 'auto') {
         return {
-          bg: 'transparent', card: 'transparent', text: '#111827', muted: '#64748b',
-          line: '#d7dde6', accent: state.accent, chip: soft(state.accent, 0.1), inverse: '#ffffff'
+          bg: 'transparent', card: 'transparent', text: customText, muted: '#64748b',
+          line: state.borderColor || '#d7dde6', accent: state.accent, chip: soft(state.accent, 0.1), inverse: '#ffffff'
         };
       }
       return dark
-        ? { bg: '#111214', card: '#111214', text: '#ffffff', muted: '#9ca3af', line: '#3f3f46', accent: state.accent, chip: soft(state.accent, 0.22), inverse: '#111214' }
-        : { bg: '#ffffff', card: '#ffffff', text: '#101828', muted: '#667085', line: '#dde2ea', accent: state.accent, chip: soft(state.accent, 0.12), inverse: '#ffffff' };
+        ? { bg: customBg, card: customBg, text: customText, muted: '#9ca3af', line: state.borderColor || '#3f3f46', accent: state.accent, chip: soft(state.accent, 0.22), inverse: '#111214' }
+        : { bg: customBg, card: customBg, text: customText, muted: '#667085', line: state.borderColor || '#dde2ea', accent: state.accent, chip: soft(state.accent, 0.12), inverse: '#ffffff' };
     }
 
     function contactLine(c) {
@@ -1028,7 +1333,49 @@
       return templates.find(t => t.id === state.template) || templates[0];
     }
 
-    function signatureHtml() {
+    function templateDesignDefaults(tpl) {
+      const dark = tpl.mode === 'locked-dark';
+      return {
+        borderColor: dark ? '#3f3f46' : '#d7dde6',
+        cardBg: dark ? '#111214' : '#ffffff',
+        textColor: dark ? '#ffffff' : '#111827'
+      };
+    }
+
+    function applyDesignControls(html) {
+      const width = Math.max(420, Math.min(820, Number(state.cardWidth) || 620));
+      const fontScale = (Number(state.fontScale) || 100) / 100;
+      const paddingScale = (Number(state.paddingScale) || 100) / 100;
+      const radius = Math.max(0, Number(state.radius) || 0);
+      const borderWidth = Math.max(0, Number(state.borderWidth) || 0);
+      const borderStyle = ['solid', 'dashed', 'double'].includes(state.borderStyle) ? state.borderStyle : 'solid';
+      const borderColor = state.borderColor || colors().line;
+      const bg = state.cardBg || colors().card;
+      const text = state.textColor || colors().text;
+      const font = state.fontFamily || 'Arial, Helvetica, sans-serif';
+      let output = html
+        .replace(/width:\d+px; max-width:100%;/, `width:${width}px; max-width:100%;`)
+        .replace(/font-family:[^;]+;/, `font-family:${font};`)
+        .replace(/background:[^;"]+;/, `background:${bg};`)
+        .replace(/color:[^;"]+;/, `color:${text};`);
+
+      if (/border:\d+px [^;"]+;/.test(output)) {
+        output = output.replace(/border:\d+px [^;"]+;/, `border:${borderWidth}px ${borderStyle} ${borderColor};`);
+      }
+      if (/border-radius:\d+px;/.test(output)) {
+        output = output.replace(/border-radius:\d+px;/, `border-radius:${radius}px;`);
+      }
+      output = output.replace(/font-size:(\d+)px/g, (_, size) => `font-size:${Math.round(Number(size) * fontScale)}px`);
+      output = output.replace(/padding:([0-9]+)px(?: ([0-9]+)px)?/g, (_, a, b) => {
+        const first = Math.max(0, Math.round(Number(a) * paddingScale));
+        if (!b) return `padding:${first}px`;
+        const second = Math.max(0, Math.round(Number(b) * paddingScale));
+        return `padding:${first}px ${second}px`;
+      });
+      return output;
+    }
+
+    function signatureHtmlRaw() {
       const c = colors();
       const accent = state.accent;
       const name = escapeHtml(state.name);
@@ -1434,6 +1781,10 @@
         </table>`;
     }
 
+    function signatureHtml() {
+      return applyDesignControls(signatureHtmlRaw());
+    }
+
     function familySignature(meta, c, d) {
       const dark = meta.mode === 'locked-dark';
       const accent = d.accent;
@@ -1578,29 +1929,40 @@
 
     function renderTemplates() {
       const list = $('#template-list');
-      const matches = templates.filter((tpl) => {
+      const visible = templates.filter(tpl => !hiddenDesigns.includes(tpl.id));
+      const matches = visible.filter((tpl) => {
         const haystack = `${tpl.name} ${tpl.category || ''} ${tpl.note || ''}`.toLowerCase();
         return (categoryFilter === 'all' || tpl.category === categoryFilter) &&
           (!designSearch || haystack.includes(designSearch.toLowerCase()));
       });
+      $('#design-count').textContent = `${visible.length} design${visible.length === 1 ? '' : 's'}`;
       list.innerHTML = matches.map((tpl) => {
         return `<button type="button" class="template-card ${tpl.id === state.template ? 'active' : ''}" data-template="${tpl.id}">
           <div class="mini-preview">${swatchHtml(tpl)}</div>
           <div class="template-name">${escapeHtml(tpl.name)}</div>
           <div class="template-note">${escapeHtml(tpl.category || 'Signature')} · ${escapeHtml(tpl.note)}</div>
+          <div class="template-card-actions"><span class="mini-action" data-hide-template="${tpl.id}">Hide</span></div>
         </button>`;
       }).join('') || `<div class="hint">No designs match that filter.</div>`;
     }
 
     function swatchHtml(tpl) {
-      const band = ['slate-band', 'ember', 'corner-office'].includes(tpl.id) ? '<div class="swatch-band"></div>' : '';
-      return `<div class="swatch ${tpl.id}" style="--swatch-accent:${tpl.accent}">
-        <div class="swatch-photo"></div>
-        <div class="swatch-line one"></div>
-        <div class="swatch-line two"></div>
-        <div class="swatch-line three"></div>
-        ${band}
-      </div>`;
+      const previous = { ...state };
+      state = {
+        ...state,
+        template: tpl.id,
+        accent: tpl.accent,
+        colorMode: tpl.mode,
+        cardWidth: 620,
+        fontScale: 100,
+        paddingScale: 100,
+        radius: 18,
+        borderWidth: 1,
+        photo: transparentPixel
+      };
+      const html = signatureHtml();
+      state = previous;
+      return `<div class="mini-preview-inner">${html}</div>`;
     }
 
     function renderForm() {
@@ -1608,6 +1970,10 @@
         const input = document.querySelector(`[name="${key}"]`);
         if (input) input.value = state[key] || '';
       });
+      updateOutputs();
+      renderAvatars();
+      renderPresets();
+      renderSavedCards();
     }
 
     function renderCategories() {
@@ -1625,6 +1991,54 @@
       renderTemplates();
       renderForm();
       saveState();
+    }
+
+    function updatePreviewOnly() {
+      $('#signature-preview').innerHTML = signatureHtml();
+      $('#mode-note').textContent = state.colorMode === 'auto' ? 'Allows email client color behavior' : 'Locked colors for email clients';
+      updateOutputs();
+      renderAvatars();
+      renderPresets();
+    }
+
+    function updateOutputs() {
+      const pairs = [
+        ['cardWidth', 'px'],
+        ['fontScale', '%'],
+        ['paddingScale', '%'],
+        ['radius', 'px'],
+        ['borderWidth', 'px']
+      ];
+      pairs.forEach(([key, suffix]) => {
+        const output = $(`#${key}Out`);
+        if (output) output.textContent = `${state[key]}${suffix}`;
+      });
+    }
+
+    function renderAvatars() {
+      $('#avatar-grid').innerHTML = avatarPaths.map((src, index) => `
+        <button class="avatar-option ${state.photo === src ? 'active' : ''}" type="button" data-avatar="${src}" title="Avatar ${index + 1}">
+          <img src="${src}" alt="">
+        </button>
+      `).join('');
+    }
+
+    function renderPresets() {
+      $('#design-presets').innerHTML = Object.entries(designPresets).map(([id, preset]) => `
+        <button class="preset ${state.preset === id ? 'active' : ''}" type="button" data-preset="${id}">${escapeHtml(preset.label)}</button>
+      `).join('');
+    }
+
+    function renderSavedCards() {
+      $('#saved-list').innerHTML = savedCards.length ? savedCards.map((card) => `
+        <div class="saved-card">
+          <div class="saved-card-title">${escapeHtml(card.label)}</div>
+          <div class="saved-card-actions">
+            <button class="btn" type="button" data-load-saved="${card.id}">Load</button>
+            <button class="btn danger" type="button" data-delete-saved="${card.id}">Delete</button>
+          </div>
+        </div>
+      `).join('') : `<div class="hint">No saved cards yet.</div>`;
     }
 
     async function copyRich() {
@@ -1678,12 +2092,103 @@
       URL.revokeObjectURL(link.href);
     }
 
+    function downloadHtmlFile() {
+      const blob = new Blob([signatureHtml()], { type: 'text/html' });
+      const link = document.createElement('a');
+      const name = (state.name || 'signature').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'signature';
+      link.href = URL.createObjectURL(blob);
+      link.download = `${name}-signacard.html`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      toast('Downloaded HTML');
+    }
+
+    function applyPreset(id) {
+      const preset = designPresets[id];
+      if (!preset) return;
+      state = { ...state, ...preset, preset: id };
+      saveState();
+      render();
+    }
+
+    function saveCurrentCard() {
+      const id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+      const label = `${state.name || 'Untitled'} - ${templateMeta().name}`;
+      savedCards.unshift({ id, label, state: { ...state }, savedAt: new Date().toISOString() });
+      savedCards = savedCards.slice(0, 24);
+      saveSavedCards();
+      renderSavedCards();
+      toast('Saved card');
+    }
+
+    function randomItem(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function shuffleCard() {
+      const person = randomItem(randomPeople);
+      const tpl = randomItem(templates.filter(t => !hiddenDesigns.includes(t.id)));
+      const presetId = randomItem(Object.keys(designPresets));
+      const preset = designPresets[presetId];
+      state = {
+        ...state,
+        template: tpl.id,
+        name: person[0],
+        title: person[1],
+        company: person[2],
+        email: person[3],
+        phone: person[4],
+        website: person[5],
+        logo: person[2],
+        location: randomItem(['Tulsa, OK', 'Kansas City, MO', 'Austin, TX', 'Denver, CO', 'Remote']),
+        tagline: randomItem([
+          'Useful work, clean communication, and fewer loose ends.',
+          'Practical strategy for teams that need momentum.',
+          'Clear systems for busy people and growing teams.',
+          'Friendly service, polished details, and reliable follow-through.'
+        ]),
+        accent: tpl.accent,
+        colorMode: tpl.mode,
+        photo: randomItem(avatarPaths),
+        photoSource: 'avatar',
+        photoStyle: randomItem(['template', 'circle', 'soft', 'square']),
+        ...preset,
+        preset: presetId,
+        borderColor: tpl.mode === 'locked-dark' ? '#334155' : '#d7dde6',
+        cardBg: tpl.mode === 'locked-dark' ? '#111214' : '#ffffff',
+        textColor: tpl.mode === 'locked-dark' ? '#ffffff' : '#111827'
+      };
+      render();
+      toast('Shuffled card');
+    }
+
+    function resetCard() {
+      state = { ...defaultState };
+      render();
+      toast('Reset card');
+    }
+
+    function readPhotoFile(file) {
+      if (!file || !file.type.startsWith('image/')) {
+        toast('Choose an image file');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        state.photo = reader.result;
+        state.photoSource = 'local';
+        saveState();
+        render();
+        toast('Local preview image saved');
+      };
+      reader.readAsDataURL(file);
+    }
+
     document.addEventListener('input', (event) => {
       if (!event.target.name) return;
       state[event.target.name] = event.target.value;
       saveState();
-      $('#signature-preview').innerHTML = signatureHtml();
-      $('#mode-note').textContent = state.colorMode === 'auto' ? 'Allows email client color behavior' : 'Locked colors for email clients';
+      updatePreviewOnly();
     });
 
     document.addEventListener('change', (event) => {
@@ -1700,17 +2205,61 @@
         };
         reader.readAsText(event.target.files[0]);
       }
+      if (event.target.id === 'photo-upload' && event.target.files[0]) {
+        readPhotoFile(event.target.files[0]);
+      }
     });
 
     document.addEventListener('click', (event) => {
+      const hideButton = event.target.closest('[data-hide-template]');
+      if (hideButton) {
+        event.stopPropagation();
+        const id = hideButton.dataset.hideTemplate;
+        hiddenDesigns = Array.from(new Set([...hiddenDesigns, id]));
+        if (state.template === id) {
+          const next = templates.find(t => !hiddenDesigns.includes(t.id)) || templates[0];
+          state.template = next.id;
+          state.accent = next.accent;
+          state.colorMode = next.mode;
+        }
+        saveHiddenDesigns();
+        render();
+        toast('Design hidden');
+        return;
+      }
       const templateButton = event.target.closest('[data-template]');
       if (templateButton) {
         const tpl = templates.find(t => t.id === templateButton.dataset.template);
         state.template = tpl.id;
         state.accent = tpl.accent;
         state.colorMode = tpl.mode;
+        state = { ...state, ...templateDesignDefaults(tpl) };
         render();
         document.body.classList.remove('show-templates');
+      }
+      const avatarButton = event.target.closest('[data-avatar]');
+      if (avatarButton) {
+        state.photo = avatarButton.dataset.avatar;
+        state.photoSource = 'avatar';
+        render();
+      }
+      const presetButton = event.target.closest('[data-preset]');
+      if (presetButton) applyPreset(presetButton.dataset.preset);
+      const loadSaved = event.target.closest('[data-load-saved]');
+      if (loadSaved) {
+        const card = savedCards.find(item => item.id === loadSaved.dataset.loadSaved);
+        if (card) {
+          state = { ...defaultState, ...card.state };
+          render();
+          toast('Loaded saved card');
+        }
+      }
+      const deleteSaved = event.target.closest('[data-delete-saved]');
+      if (deleteSaved) {
+        savedCards = savedCards.filter(item => item.id !== deleteSaved.dataset.deleteSaved);
+        saveSavedCards();
+        renderSavedCards();
+        toast('Deleted saved card');
       }
     });
 
@@ -1718,6 +2267,30 @@
     $('#copy-html').addEventListener('click', copyHtml);
     $('#export-json').addEventListener('click', downloadBackup);
     $('#import-json').addEventListener('click', () => $('#json-file').click());
+    $('#download-html').addEventListener('click', downloadHtmlFile);
+    $('#shuffle-card').addEventListener('click', shuffleCard);
+    $('#save-card').addEventListener('click', saveCurrentCard);
+    $('#reset-card').addEventListener('click', resetCard);
+    $('#restore-designs').addEventListener('click', () => {
+      hiddenDesigns = [];
+      saveHiddenDesigns();
+      render();
+      toast('Included designs restored');
+    });
+    $('#drop-zone').addEventListener('click', () => $('#photo-upload').click());
+    $('#drop-zone').addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') $('#photo-upload').click();
+    });
+    $('#drop-zone').addEventListener('dragover', (event) => {
+      event.preventDefault();
+      $('#drop-zone').classList.add('dragging');
+    });
+    $('#drop-zone').addEventListener('dragleave', () => $('#drop-zone').classList.remove('dragging'));
+    $('#drop-zone').addEventListener('drop', (event) => {
+      event.preventDefault();
+      $('#drop-zone').classList.remove('dragging');
+      readPhotoFile(event.dataTransfer.files[0]);
+    });
     $('#design-search').addEventListener('input', (event) => {
       designSearch = event.target.value;
       renderTemplates();
