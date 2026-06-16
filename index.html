@@ -159,10 +159,6 @@
       flex-wrap: wrap;
       justify-content: flex-end;
     }
-    .top-actions-secondary {
-      display: inline-flex;
-      gap: 8px;
-    }
     .mobile-panel-actions {
       display: none;
       gap: 8px;
@@ -180,6 +176,7 @@
       justify-content: center;
       gap: 8px;
       white-space: nowrap;
+      font-weight: 750;
     }
     .btn.primary {
       background: var(--accent);
@@ -197,7 +194,7 @@
       margin: 0 0 12px;
       font-size: 13px;
       color: var(--muted);
-      font-weight: 900;
+      font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
@@ -216,14 +213,14 @@
       color: var(--muted);
       font-size: 12px;
       line-height: 1.35;
-      font-weight: 750;
+      font-weight: 500;
     }
     .count-pill {
       background: var(--soft);
       border-radius: 999px;
       color: var(--text);
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 700;
       padding: 6px 10px;
       white-space: nowrap;
     }
@@ -246,7 +243,7 @@
       background: var(--panel-strong);
       padding: 9px 11px;
       outline: none;
-      font-weight: 700;
+      font-weight: 600;
     }
     .template-card {
       width: 100%;
@@ -270,7 +267,7 @@
       gap: 10px;
     }
     .template-name {
-      font-weight: 900;
+      font-weight: 800;
       font-size: 14px;
       letter-spacing: -0.02em;
     }
@@ -284,7 +281,7 @@
       background: var(--soft);
       color: var(--muted);
       font-size: 10px;
-      font-weight: 900;
+      font-weight: 750;
       padding: 4px 7px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -301,6 +298,13 @@
       display: flex;
       justify-content: flex-end;
       gap: 8px;
+      opacity: 0;
+      transition: opacity 0.16s ease;
+    }
+    .template-card:hover .template-card-actions,
+    .template-card:focus-within .template-card-actions,
+    .template-card.active .template-card-actions {
+      opacity: 1;
     }
     .mini-action {
       min-height: 28px;
@@ -308,8 +312,11 @@
       background: var(--soft);
       color: var(--muted);
       font-size: 11px;
-      font-weight: 900;
-      padding: 0 9px;
+      font-weight: 700;
+      padding: 6px 9px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
     }
     .empty-state {
       border: 1px dashed var(--line);
@@ -488,7 +495,7 @@
       right: 16px;
       top: 12px;
       color: var(--swatch-accent);
-      font-weight: 900;
+      font-weight: 750;
       font-size: 24px;
     }
     .swatch.education-seal {
@@ -598,7 +605,7 @@
       background: transparent;
       color: var(--muted);
       font-size: 11px;
-      font-weight: 900;
+      font-weight: 750;
     }
     .preview-size.active {
       background: var(--panel);
@@ -648,19 +655,19 @@
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      font-weight: 950;
+      font-weight: 800;
       color: var(--muted);
     }
     .control-heading span {
       color: var(--muted);
       font-size: 11px;
-      font-weight: 850;
+      font-weight: 600;
     }
     .subsection summary {
       cursor: pointer;
       font-size: 12px;
       color: var(--muted);
-      font-weight: 900;
+      font-weight: 750;
       letter-spacing: 0.06em;
       text-transform: uppercase;
     }
@@ -673,7 +680,7 @@
     .field-row output {
       color: var(--muted);
       font-size: 12px;
-      font-weight: 900;
+      font-weight: 650;
       min-width: 58px;
       text-align: right;
     }
@@ -695,11 +702,11 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .preset {
-      min-height: 48px;
+      min-height: 44px;
       border-radius: 12px;
       border: 1px solid var(--line);
       background: var(--panel-strong);
-      font-weight: 900;
+      font-weight: 750;
       display: grid;
       place-items: center;
       gap: 2px;
@@ -709,7 +716,7 @@
     .preset span {
       color: var(--muted);
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 500;
     }
     .preset.active {
       border-color: var(--accent);
@@ -747,7 +754,7 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.4;
-      font-weight: 800;
+      font-weight: 500;
     }
     .drop-zone.dragging {
       border-color: var(--accent);
@@ -760,6 +767,26 @@
       line-height: 1.45;
       resize: vertical;
     }
+    .sidebar-section {
+      border-top: 1px solid var(--line);
+      margin-top: 18px;
+      padding-top: 16px;
+    }
+    .library-options {
+      margin-bottom: 12px;
+    }
+    .library-options summary {
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .library-options .btn {
+      margin-top: 10px;
+      width: 100%;
+    }
     .saved-card {
       border: 1px solid var(--line);
       border-radius: 12px;
@@ -769,7 +796,7 @@
       gap: 8px;
     }
     .saved-card-title {
-      font-weight: 900;
+      font-weight: 750;
       font-size: 13px;
     }
     .saved-card-meta {
@@ -964,10 +991,6 @@
         min-height: 220px;
         padding: 16px;
       }
-      #export-json,
-      #import-json {
-        display: none;
-      }
       .mobile-tabs {
         display: none;
         grid-row: 3;
@@ -1012,11 +1035,7 @@
         padding: 0 8px;
         font-size: 14px;
       }
-      .top-actions-secondary {
-        display: none;
-      }
-      #download-html,
-      #copy-html {
+      #download-html {
         display: none;
       }
       .preview-label {
@@ -1068,9 +1087,18 @@
         <select id="category-filter" aria-label="Filter designs by category">
           <option value="all">All categories</option>
         </select>
-        <button class="btn" type="button" id="restore-designs">Restore included designs</button>
       </div>
       <div class="template-list" id="template-list"></div>
+      <div class="sidebar-section">
+        <details class="library-options">
+          <summary>Library options</summary>
+          <button class="btn" type="button" id="restore-designs">Restore included designs</button>
+        </details>
+        <div class="section-title-row">
+          <h3 class="section-title">Saved Cards</h3>
+        </div>
+        <div class="saved-list" id="saved-list"></div>
+      </div>
     </aside>
 
     <main class="workspace">
@@ -1086,11 +1114,6 @@
           <button class="btn coffee" type="button" id="shuffle-card">Shuffle</button>
           <button class="btn primary" type="button" id="copy-rich">Copy</button>
           <button class="btn" type="button" id="download-html">Download</button>
-          <button class="btn" type="button" id="copy-html" title="Copy HTML">HTML</button>
-          <span class="top-actions-secondary">
-            <button class="btn" type="button" id="export-json">Backup</button>
-            <button class="btn" type="button" id="import-json">Import</button>
-          </span>
         </div>
         <div class="mobile-panel-actions" aria-label="Mobile editing panels">
           <button class="btn" type="button" id="mobile-open-designs">Designs <span id="mobile-design-count" aria-hidden="true" hidden></span></button>
@@ -1164,20 +1187,20 @@
         <section class="control-section">
           <div class="control-heading"><h3>Image</h3><span>Avatar or hosted photo</span></div>
         <div class="field">
-          <label>3D Avatar Library</label>
-          <div class="avatar-grid" id="avatar-grid"></div>
-        </div>
-        <div class="field">
           <label for="photo">Hosted Photo URL</label>
           <input id="photo" name="photo" inputmode="url">
         </div>
         <div class="field">
-          <label for="photo-upload">Drag in a test image</label>
-          <div class="drop-zone" id="drop-zone" tabindex="0">Drop an image here or click to upload. Local images are stored in this browser for preview only; email recipients will not see them until you host the image and use its URL.</div>
+          <label for="photo-upload">Test image</label>
+          <div class="drop-zone" id="drop-zone" tabindex="0">Drop or choose a local preview image. It stays in this browser until you host it.</div>
           <input class="hidden-file" type="file" accept="image/*" id="photo-upload">
         </div>
+        <details class="subsection">
+          <summary>Avatar library</summary>
+          <div class="avatar-grid" id="avatar-grid"></div>
+        </details>
         <div class="field">
-          <label for="photoStyle">Photo Shape</label>
+          <label for="photoStyle">Crop Shape</label>
           <select id="photoStyle" name="photoStyle">
             <option value="template">Use design default</option>
             <option value="circle">Circle</option>
@@ -1274,28 +1297,18 @@
           </div>
         </details>
         </section>
-        <section class="control-section">
-          <div class="control-heading"><h3>Output</h3><span>Copy, download, backup</span></div>
+        <details class="subsection">
+          <summary>HTML and backup</summary>
           <div class="action-grid">
-            <button class="btn primary" type="button" id="panel-copy-rich">Copy Signature</button>
-            <button class="btn" type="button" id="panel-copy-html">Copy HTML</button>
-            <button class="btn" type="button" id="panel-download-html">Download HTML</button>
-            <button class="btn" type="button" id="panel-export-json">Backup App</button>
-            <button class="btn" type="button" id="panel-import-json">Import Backup</button>
-            <button class="btn" type="button" id="panel-save-card">Save Card</button>
+            <button class="btn" type="button" id="panel-copy-html">Copy code</button>
+            <button class="btn" type="button" id="panel-export-json">Backup</button>
+            <button class="btn" type="button" id="panel-import-json">Import</button>
           </div>
           <div class="field">
-            <label for="html-output">Generated HTML</label>
+            <label for="html-output">HTML code</label>
             <textarea class="html-output" id="html-output" readonly spellcheck="false"></textarea>
           </div>
-          <p class="hint">Hosted images work in email. Dragged-in local images are only stored in this browser so you can test the look before hosting the image.</p>
-        </section>
-        <div class="subsection">
-          <div class="section-title-row">
-            <h3 class="section-title">Saved Cards</h3>
-          </div>
-          <div class="saved-list" id="saved-list"></div>
-        </div>
+        </details>
         <p class="hint">Signatures are exported as inline, table-based HTML. Locked modes use explicit colors so your signature does not change just because the viewer uses dark mode.</p>
       </form>
       <input class="hidden-file" type="file" accept="application/json" id="json-file">
@@ -1318,12 +1331,12 @@
     const avatarPaths = Array.from({ length: 48 }, (_, index) => `assets/avatars/avatar-${index + 1}.png`);
     const defaultPhoto = avatarPaths[0];
     const designPresets = {
-      full: { label: 'Full', note: '760px / 124%', cardWidth: 760, fontScale: 124, paddingScale: 132, radius: 28, borderWidth: 1 },
-      large: { label: 'Large', note: '680px / 114%', cardWidth: 680, fontScale: 114, paddingScale: 116, radius: 22, borderWidth: 1 },
-      standard: { label: 'Standard', note: '600px / 100%', cardWidth: 600, fontScale: 100, paddingScale: 100, radius: 18, borderWidth: 1 },
-      compact: { label: 'Compact', note: '500px / 90%', cardWidth: 500, fontScale: 90, paddingScale: 82, radius: 14, borderWidth: 1 },
-      petite: { label: 'Petite', note: '410px / 82%', cardWidth: 410, fontScale: 82, paddingScale: 66, radius: 10, borderWidth: 1 },
-      micro: { label: 'Micro', note: '340px / 76%', cardWidth: 340, fontScale: 76, paddingScale: 56, radius: 8, borderWidth: 1 }
+      full: { label: 'Full', note: 'Roomiest', cardWidth: 760, fontScale: 124, paddingScale: 132, radius: 28, borderWidth: 1 },
+      large: { label: 'Large', note: 'Spacious', cardWidth: 680, fontScale: 114, paddingScale: 116, radius: 22, borderWidth: 1 },
+      standard: { label: 'Standard', note: 'Balanced', cardWidth: 600, fontScale: 100, paddingScale: 100, radius: 18, borderWidth: 1 },
+      compact: { label: 'Compact', note: 'Tighter', cardWidth: 500, fontScale: 90, paddingScale: 76, radius: 14, borderWidth: 1 },
+      petite: { label: 'Petite', note: 'Small', cardWidth: 410, fontScale: 82, paddingScale: 58, radius: 10, borderWidth: 1 },
+      micro: { label: 'Micro', note: 'Tiny', cardWidth: 340, fontScale: 76, paddingScale: 44, radius: 8, borderWidth: 1 }
     };
     const avatarProfiles = [
       ['Claire Bennett', 'Creative Director', 'Brightline Studio', 'claire@brightline.example', '(555) 014-2201', 'brightline.example', 'Tulsa, OK'],
@@ -1693,6 +1706,14 @@
         if (!b) return `padding:${first}px`;
         const second = Math.max(0, Math.round(Number(b) * paddingScale));
         return `padding:${first}px ${second}px`;
+      });
+      output = output.replace(/padding-left:([0-9]+)px/g, (_, size) => {
+        const scaled = Math.max(4, Math.round(Number(size) * paddingScale));
+        return `padding-left:${scaled}px`;
+      });
+      output = output.replace(/margin:([0-9]+)px 0/g, (_, size) => {
+        const scaled = Math.max(4, Math.round(Number(size) * paddingScale));
+        return `margin:${scaled}px 0`;
       });
       return output;
     }
@@ -2701,16 +2722,10 @@
     });
 
     $('#copy-rich').addEventListener('click', copyRich);
-    $('#copy-html').addEventListener('click', copyHtml);
-    $('#export-json').addEventListener('click', downloadBackup);
-    $('#import-json').addEventListener('click', () => $('#json-file').click());
     $('#download-html').addEventListener('click', downloadHtmlFile);
-    $('#panel-copy-rich').addEventListener('click', copyRich);
     $('#panel-copy-html').addEventListener('click', copyHtml);
     $('#panel-export-json').addEventListener('click', downloadBackup);
     $('#panel-import-json').addEventListener('click', () => $('#json-file').click());
-    $('#panel-download-html').addEventListener('click', downloadHtmlFile);
-    $('#panel-save-card').addEventListener('click', saveCurrentCard);
     $('#shuffle-card').addEventListener('click', shuffleCard);
     $('#save-card').addEventListener('click', saveCurrentCard);
     $('#reset-card').addEventListener('click', resetCard);
