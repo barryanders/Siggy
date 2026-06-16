@@ -267,7 +267,7 @@
       padding: 0 9px;
     }
     .mini-preview {
-      height: 86px;
+      height: 96px;
       border-radius: 10px;
       overflow: hidden;
       background: #ffffff;
@@ -277,10 +277,10 @@
     }
     .mini-preview-inner {
       position: absolute;
-      left: 10px;
-      top: 10px;
+      left: 8px;
+      top: 8px;
       width: 650px;
-      transform: scale(0.42);
+      transform: scale(0.36);
       transform-origin: top left;
       pointer-events: none;
     }
@@ -571,12 +571,21 @@
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
     .preset {
-      min-height: 38px;
+      min-height: 48px;
       border-radius: 12px;
       border: 1px solid var(--line);
       background: var(--panel-strong);
-      font-size: 12px;
       font-weight: 900;
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      line-height: 1.1;
+    }
+    .preset strong { font-size: 12px; }
+    .preset span {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
     }
     .preset.active {
       border-color: var(--accent);
@@ -970,11 +979,11 @@
         <div class="two">
           <div class="field">
             <label for="cardWidth">Card Width</label>
-            <div class="field-row"><input id="cardWidth" name="cardWidth" type="range" min="480" max="760" step="10"><output id="cardWidthOut"></output></div>
+            <div class="field-row"><input id="cardWidth" name="cardWidth" type="range" min="320" max="760" step="10"><output id="cardWidthOut"></output></div>
           </div>
           <div class="field">
             <label for="fontScale">Text Size</label>
-            <div class="field-row"><input id="fontScale" name="fontScale" type="range" min="85" max="120" step="1"><output id="fontScaleOut"></output></div>
+            <div class="field-row"><input id="fontScale" name="fontScale" type="range" min="75" max="128" step="1"><output id="fontScaleOut"></output></div>
           </div>
         </div>
         <div class="two">
@@ -986,7 +995,7 @@
           <div class="two">
             <div class="field">
               <label for="paddingScale">Padding</label>
-              <div class="field-row"><input id="paddingScale" name="paddingScale" type="range" min="75" max="135" step="5"><output id="paddingScaleOut"></output></div>
+              <div class="field-row"><input id="paddingScale" name="paddingScale" type="range" min="55" max="140" step="5"><output id="paddingScaleOut"></output></div>
             </div>
             <div class="field">
               <label for="radius">Corners</label>
@@ -1054,28 +1063,79 @@
 
   <script>
     const STORAGE_KEY = 'signacard.v2';
-    const STATE_VERSION = 3;
+    const STATE_VERSION = 4;
     const SAVED_KEY = 'signacard.savedCards.v1';
     const HIDDEN_DESIGNS_KEY = 'signacard.hiddenDesigns.v1';
     const transparentPixel = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3Crect width="1" height="1" fill="transparent"/%3E%3C/svg%3E';
     const avatarPaths = Array.from({ length: 48 }, (_, index) => `assets/avatars/avatar-${index + 1}.png`);
     const defaultPhoto = avatarPaths[0];
     const designPresets = {
-      balanced: { label: 'Balanced', cardWidth: 620, fontScale: 100, paddingScale: 100, radius: 18, borderWidth: 1 },
-      compact: { label: 'Compact', cardWidth: 540, fontScale: 92, paddingScale: 85, radius: 14, borderWidth: 1 },
-      roomy: { label: 'Roomy', cardWidth: 700, fontScale: 108, paddingScale: 120, radius: 24, borderWidth: 1 },
-      bold: { label: 'Bold', cardWidth: 650, fontScale: 112, paddingScale: 105, radius: 16, borderWidth: 2 },
-      soft: { label: 'Soft', cardWidth: 610, fontScale: 98, paddingScale: 112, radius: 28, borderWidth: 1 },
-      slim: { label: 'Slim', cardWidth: 500, fontScale: 90, paddingScale: 80, radius: 10, borderWidth: 1 }
+      full: { label: 'Full', note: '760px / 124%', cardWidth: 760, fontScale: 124, paddingScale: 132, radius: 28, borderWidth: 1 },
+      large: { label: 'Large', note: '680px / 114%', cardWidth: 680, fontScale: 114, paddingScale: 116, radius: 22, borderWidth: 1 },
+      standard: { label: 'Standard', note: '600px / 100%', cardWidth: 600, fontScale: 100, paddingScale: 100, radius: 18, borderWidth: 1 },
+      compact: { label: 'Compact', note: '500px / 90%', cardWidth: 500, fontScale: 90, paddingScale: 82, radius: 14, borderWidth: 1 },
+      petite: { label: 'Petite', note: '410px / 82%', cardWidth: 410, fontScale: 82, paddingScale: 66, radius: 10, borderWidth: 1 },
+      micro: { label: 'Micro', note: '340px / 76%', cardWidth: 340, fontScale: 76, paddingScale: 56, radius: 8, borderWidth: 1 }
     };
-    const randomPeople = [
-      ['Avery Stone', 'Brand Strategist', 'Brightline Studio', 'avery@brightline.example', '(555) 014-2201', 'brightline.example'],
-      ['Maya Brooks', 'Client Success Lead', 'Orbit Works', 'maya@orbit.example', '(555) 018-3479', 'orbit.example'],
-      ['Elliot Chen', 'Product Designer', 'North Loop Labs', 'elliot@northloop.example', '(555) 013-8820', 'northloop.example'],
-      ['Sam Rivera', 'Operations Manager', 'Fieldmark Co.', 'sam@fieldmark.example', '(555) 011-7306', 'fieldmark.example'],
-      ['Priya Hart', 'Founder', 'Kindred Office', 'priya@kindred.example', '(555) 017-4028', 'kindred.example'],
-      ['Noah Bennett', 'Technical Director', 'Signal Foundry', 'noah@signal.example', '(555) 016-1194', 'signal.example']
-    ];
+    const avatarProfiles = [
+      ['Claire Bennett', 'Creative Director', 'Brightline Studio', 'claire@brightline.example', '(555) 014-2201', 'brightline.example', 'Tulsa, OK'],
+      ['Ethan Brooks', 'Business Strategist', 'North Loop Advisors', 'ethan@northloop.example', '(555) 018-3479', 'northloop.example', 'Kansas City, MO'],
+      ['Oliver Hooten', 'Professor', 'Cedar Hall College', 'oliver@cedarhall.example', '(555) 013-8820', 'cedarhall.example', 'Boulder, CO'],
+      ['Milo Rivers', 'Audio Producer', 'Signal Room', 'milo@signalroom.example', '(555) 011-7306', 'signalroom.example', 'Nashville, TN'],
+      ['Ruby Tanaka', 'Travel Coordinator', 'Wayfinder Co.', 'ruby@wayfinder.example', '(555) 017-4028', 'wayfinder.example', 'Seattle, WA'],
+      ['Mina Snow', 'Veterinarian', 'Kindred Animal Clinic', 'mina@kindredvet.example', '(555) 016-1194', 'kindredvet.example', 'Denver, CO'],
+      ['Percy Waddell', 'Operations Manager', 'Polar Office', 'percy@polaroffice.example', '(555) 012-9091', 'polaroffice.example', 'Chicago, IL'],
+      ['Aubrey Hart', 'Archaeologist', 'Fieldmark Research', 'aubrey@fieldmark.example', '(555) 019-6642', 'fieldmark.example', 'Santa Fe, NM'],
+      ['Nia Carter', 'Athletic Director', 'Courtside Academy', 'nia@courtside.example', '(555) 015-2098', 'courtside.example', 'Atlanta, GA'],
+      ['Kenji Mori', 'Streamer Relations Lead', 'Orbit Games', 'kenji@orbitgames.example', '(555) 010-4492', 'orbitgames.example', 'Portland, OR'],
+      ['Sofia Reyes', 'Youth Soccer Coach', 'Greenline FC', 'sofia@greenline.example', '(555) 018-5541', 'greenline.example', 'San Antonio, TX'],
+      ['Arjun Patel', 'Cricket Coach', 'Willow Club', 'arjun@willowclub.example', '(555) 013-4470', 'willowclub.example', 'Austin, TX'],
+      ['Elena Yazzie', 'Textile Artist', 'Mesa Loom Studio', 'elena@mesaloom.example', '(555) 017-8363', 'mesaloom.example', 'Flagstaff, AZ'],
+      ['Lena Haddad', 'Executive Chef', 'Saffron Table', 'lena@saffrontable.example', '(555) 011-2840', 'saffrontable.example', 'Dearborn, MI'],
+      ['Baxter Ford', 'Mechanic', 'Honest Wrench', 'baxter@honestwrench.example', '(555) 016-3382', 'honestwrench.example', 'Omaha, NE'],
+      ['Tasha Brooks', 'Wildlife Biologist', 'Riverbend Conservancy', 'tasha@riverbend.example', '(555) 019-3005', 'riverbend.example', 'Asheville, NC'],
+      ['Violet Kim', 'Robotics Engineer', 'Bright Bolt Labs', 'violet@brightbolt.example', '(555) 014-6639', 'brightbolt.example', 'San Jose, CA'],
+      ['Marcus Reed', 'Jazz Director', 'Blue Note Office', 'marcus@bluenote.example', '(555) 012-7214', 'bluenote.example', 'New Orleans, LA'],
+      ['Connor Walsh', 'Rescue Doctor', 'Summit Medical', 'connor@summitmed.example', '(555) 018-2747', 'summitmed.example', 'Salt Lake City, UT'],
+      ['Ivy Morgan', 'Botanist', 'Greenhouse Guild', 'ivy@greenhouse.example', '(555) 017-1845', 'greenhouse.example', 'Madison, WI'],
+      ['Stella Frost', 'Fashion Designer', 'Snowline Atelier', 'stella@snowline.example', '(555) 010-6604', 'snowline.example', 'New York, NY'],
+      ['Rocco Bean', 'Cafe Owner', 'Bean & Barrel', 'rocco@beanbarrel.example', '(555) 015-7781', 'beanbarrel.example', 'Milwaukee, WI'],
+      ['Del Finn', 'Swim Coach', 'Blue Lane Club', 'del@bluelane.example', '(555) 013-9026', 'bluelane.example', 'San Diego, CA'],
+      ['Cam Cruz', 'Street Artist', 'Color Yard', 'cam@coloryard.example', '(555) 011-9348', 'coloryard.example', 'Miami, FL'],
+      ['Amina Johnson', 'Astronaut', 'Orbital Training Lab', 'amina@orbital.example', '(555) 016-0308', 'orbital.example', 'Houston, TX'],
+      ['Kai Manu', 'Surf Instructor', 'Tide School', 'kai@tideschool.example', '(555) 018-7860', 'tideschool.example', 'Honolulu, HI'],
+      ['Maya Chen', 'Dive Instructor', 'Reef Works', 'maya@reefworks.example', '(555) 014-5091', 'reefworks.example', 'Key Largo, FL'],
+      ['Priya Nair', 'Surgeon', 'Clarity Clinic', 'priya@clarityclinic.example', '(555) 019-4451', 'clarityclinic.example', 'Raleigh, NC'],
+      ['Henry Whitman', 'Physician', 'Northstar Health', 'henry@northstarhealth.example', '(555) 010-9134', 'northstarhealth.example', 'Boston, MA'],
+      ['Danielle Price', 'Pediatrician', 'Sprout Pediatrics', 'danielle@sprout.example', '(555) 017-5580', 'sprout.example', 'Charlotte, NC'],
+      ['Ryan Archer', 'Falconer', 'Skyfield Conservancy', 'ryan@skyfield.example', '(555) 015-8733', 'skyfield.example', 'Boise, ID'],
+      ['Pearl Maris', 'Sea Doctor', 'Coral Bay Clinic', 'pearl@coralbay.example', '(555) 012-6119', 'coralbay.example', 'Monterey, CA'],
+      ['Mei Sato', 'Martial Arts Instructor', 'White Crane Dojo', 'mei@whitecrane.example', '(555) 016-4488', 'whitecrane.example', 'Irvine, CA'],
+      ['Andre King', 'Community Director', 'Open Door Project', 'andre@opendoor.example', '(555) 018-3110', 'opendoor.example', 'Detroit, MI'],
+      ['Anara Bek', 'Textile Designer', 'Pattern House', 'anara@patternhouse.example', '(555) 011-7066', 'patternhouse.example', 'Minneapolis, MN'],
+      ['Tane Rangi', 'Woodcarver', 'Kauri Workshop', 'tane@kauriworkshop.example', '(555) 014-7087', 'kauriworkshop.example', 'Auckland, NZ'],
+      ['Fiona Blake', 'Violinist', 'Crescendo Studio', 'fiona@crescendo.example', '(555) 017-0631', 'crescendo.example', 'Cincinnati, OH'],
+      ['Zora Ellis', 'Painter', 'Palette Office', 'zora@paletteoffice.example', '(555) 013-1974', 'paletteoffice.example', 'Savannah, GA'],
+      ['Eli Clay', 'Ceramic Artist', 'Wheelhouse Studio', 'eli@wheelhouse.example', '(555) 019-8080', 'wheelhouse.example', 'Santa Barbara, CA'],
+      ['Anika Rao', 'Product Designer', 'Peacock Labs', 'anika@peacocklabs.example', '(555) 015-6622', 'peacocklabs.example', 'Plano, TX'],
+      ['Brielle Stone', 'Snowboard Coach', 'Alpine House', 'brielle@alpinehouse.example', '(555) 010-8702', 'alpinehouse.example', 'Park City, UT'],
+      ['Malik Turner', 'Adaptive Sports Coach', 'Full Court Access', 'malik@fullcourt.example', '(555) 018-0404', 'fullcourt.example', 'Phoenix, AZ'],
+      ['Hana Lee', 'Wellness Coach', 'Quiet Harbor', 'hana@quietharbor.example', '(555) 012-4382', 'quietharbor.example', 'San Francisco, CA'],
+      ['Brooke Palmer', 'Veterinarian', 'Golden Care Vet', 'brooke@goldencare.example', '(555) 016-8409', 'goldencare.example', 'Franklin, TN'],
+      ['Caleb Stone', 'Paramedic', 'Rapid Response Co.', 'caleb@rapidresponse.example', '(555) 011-5938', 'rapidresponse.example', 'Dallas, TX'],
+      ['Sylvia Grant', 'Research Scientist', 'Clearview Lab', 'sylvia@clearview.example', '(555) 017-9703', 'clearview.example', 'Cambridge, MA'],
+      ['Arthur Koaleman', 'Librarian', 'Oak Shelf Library', 'arthur@oakshelf.example', '(555) 014-1155', 'oakshelf.example', 'Ann Arbor, MI'],
+      ['Sienna Tiger', 'Pastry Chef', 'Copper Whisk', 'sienna@copperwhisk.example', '(555) 018-6244', 'copperwhisk.example', 'Charleston, SC']
+    ].map((person, index) => ({
+      photo: avatarPaths[index],
+      name: person[0],
+      title: person[1],
+      company: person[2],
+      email: person[3],
+      phone: person[4],
+      website: person[5],
+      location: person[6]
+    }));
 
     const templates = [
       { id: 'slate-band', name: 'Slate Band', category: 'Executive', family: 'band', note: 'Executive identity card with a bold company strip.', accent: '#ef5b49', mode: 'locked-dark' },
@@ -1185,21 +1245,21 @@
 
     const defaultState = {
       template: 'slate-band',
-      name: 'Jordan Carter',
+      name: 'Claire Bennett',
       title: 'Creative Director',
-      company: 'Northstar Studio',
+      company: 'Brightline Studio',
       photo: defaultPhoto,
-      logo: 'Northstar Studio',
-      email: 'jordan@example.com',
-      phone: '(555) 010-0147',
-      website: 'example.com',
-      location: 'Anywhere, USA',
+      logo: 'Brightline Studio',
+      email: 'claire@brightline.example',
+      phone: '(555) 014-2201',
+      website: 'brightline.example',
+      location: 'Tulsa, OK',
       tagline: 'Clear communication, thoughtful design, and useful work for people who need it.',
       accent: '#ef5b49',
       colorMode: 'locked-dark',
       photoStyle: 'template',
-      preset: 'balanced',
-      cardWidth: 620,
+      preset: 'standard',
+      cardWidth: 600,
       fontScale: 100,
       paddingScale: 100,
       radius: 18,
@@ -1261,6 +1321,10 @@
       try {
         const loaded = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
         const merged = { ...defaultState, ...loaded, stateVersion: STATE_VERSION };
+        if (!designPresets[merged.preset]) merged.preset = defaultState.preset;
+        merged.cardWidth = Math.max(320, Math.min(760, Number(merged.cardWidth) || defaultState.cardWidth));
+        merged.fontScale = Math.max(75, Math.min(128, Number(merged.fontScale) || defaultState.fontScale));
+        merged.paddingScale = Math.max(55, Math.min(140, Number(merged.paddingScale) || defaultState.paddingScale));
         if (loaded.stateVersion !== STATE_VERSION) {
           const tpl = templates.find(t => t.id === merged.template) || templates[0];
           Object.assign(merged, templateDesignDefaults(tpl));
@@ -1340,7 +1404,7 @@
     }
 
     function applyDesignControls(html) {
-      const width = Math.max(420, Math.min(820, Number(state.cardWidth) || 620));
+      const width = Math.max(320, Math.min(760, Number(state.cardWidth) || 600));
       const fontScale = (Number(state.fontScale) || 100) / 100;
       const paddingScale = (Number(state.paddingScale) || 100) / 100;
       const radius = Math.max(0, Number(state.radius) || 0);
@@ -1945,6 +2009,7 @@
 
     function swatchHtml(tpl) {
       const previous = { ...state };
+      const designDefaults = templateDesignDefaults(tpl);
       state = {
         ...state,
         template: tpl.id,
@@ -1955,7 +2020,10 @@
         paddingScale: 100,
         radius: 18,
         borderWidth: 1,
-        photo: transparentPixel
+        borderStyle: 'solid',
+        fontFamily: 'Arial, Helvetica, sans-serif',
+        photo: transparentPixel,
+        ...designDefaults
       };
       const html = signatureHtml();
       state = previous;
@@ -2022,7 +2090,10 @@
 
     function renderPresets() {
       $('#design-presets').innerHTML = Object.entries(designPresets).map(([id, preset]) => `
-        <button class="preset ${state.preset === id ? 'active' : ''}" type="button" data-preset="${id}">${escapeHtml(preset.label)}</button>
+        <button class="preset ${state.preset === id ? 'active' : ''}" type="button" data-preset="${id}">
+          <strong>${escapeHtml(preset.label)}</strong>
+          <span>${escapeHtml(preset.note)}</span>
+        </button>
       `).join('');
     }
 
@@ -2123,21 +2194,21 @@
     }
 
     function shuffleCard() {
-      const person = randomItem(randomPeople);
+      const profile = randomItem(avatarProfiles);
       const tpl = randomItem(templates.filter(t => !hiddenDesigns.includes(t.id)));
       const presetId = randomItem(Object.keys(designPresets));
       const preset = designPresets[presetId];
       state = {
         ...state,
         template: tpl.id,
-        name: person[0],
-        title: person[1],
-        company: person[2],
-        email: person[3],
-        phone: person[4],
-        website: person[5],
-        logo: person[2],
-        location: randomItem(['Tulsa, OK', 'Kansas City, MO', 'Austin, TX', 'Denver, CO', 'Remote']),
+        name: profile.name,
+        title: profile.title,
+        company: profile.company,
+        email: profile.email,
+        phone: profile.phone,
+        website: profile.website,
+        logo: profile.company,
+        location: profile.location,
         tagline: randomItem([
           'Useful work, clean communication, and fewer loose ends.',
           'Practical strategy for teams that need momentum.',
@@ -2146,7 +2217,7 @@
         ]),
         accent: tpl.accent,
         colorMode: tpl.mode,
-        photo: randomItem(avatarPaths),
+        photo: profile.photo,
         photoSource: 'avatar',
         photoStyle: randomItem(['template', 'circle', 'soft', 'square']),
         ...preset,
