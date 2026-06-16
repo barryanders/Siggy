@@ -44,6 +44,7 @@
       background: var(--bg);
       color: var(--text);
       overflow: hidden;
+      max-width: 100vw;
     }
     button, input, textarea, select {
       font: inherit;
@@ -147,6 +148,10 @@
       flex-wrap: wrap;
       justify-content: flex-end;
     }
+    .top-actions-secondary {
+      display: inline-flex;
+      gap: 8px;
+    }
     .mobile-panel-actions {
       display: none;
       gap: 8px;
@@ -195,6 +200,13 @@
     .section-title-row .section-title {
       margin: 0;
     }
+    .section-subtitle {
+      margin: -6px 0 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      font-weight: 750;
+    }
     .count-pill {
       background: var(--soft);
       border-radius: 999px;
@@ -239,10 +251,31 @@
       border-color: var(--accent);
       box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 16%, transparent);
     }
+    .template-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
     .template-name {
       font-weight: 900;
       font-size: 14px;
       letter-spacing: -0.02em;
+    }
+    .template-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .template-chip {
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 900;
+      padding: 4px 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
     .template-note {
       color: var(--muted);
@@ -503,6 +536,13 @@
       width: min(760px, 100%);
       display: grid;
       gap: 16px;
+      transition: width 0.22s ease;
+    }
+    .preview-shell.preview-mobile {
+      width: min(420px, 100%);
+    }
+    .preview-shell.preview-compact {
+      width: min(560px, 100%);
     }
     .preview-label {
       display: flex;
@@ -512,6 +552,34 @@
       color: var(--muted);
       font-size: 13px;
       font-weight: 800;
+    }
+    .preview-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      min-width: 0;
+    }
+    .preview-toolbar {
+      display: inline-flex;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 999px;
+      background: var(--soft);
+      flex: 0 0 auto;
+    }
+    .preview-size {
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .preview-size.active {
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12);
     }
     .preview-card {
       width: 100%;
@@ -535,6 +603,33 @@
       margin-top: 4px;
       display: grid;
       gap: 14px;
+    }
+    .control-section {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel-strong);
+      padding: 14px;
+      display: grid;
+      gap: 13px;
+    }
+    .control-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .control-heading h3 {
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 950;
+      color: var(--muted);
+    }
+    .control-heading span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
     }
     .subsection summary {
       cursor: pointer;
@@ -676,6 +771,11 @@
       padding: 10px 12px;
       outline: none;
     }
+    .control-section .field input,
+    .control-section .field textarea,
+    .control-section .field select {
+      background: var(--panel);
+    }
     .field textarea {
       resize: vertical;
       min-height: 76px;
@@ -785,8 +885,11 @@
         padding: 0 12px;
       }
       .mobile-panel-actions {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         order: 3;
+        flex: 0 0 100%;
+        max-width: 100%;
       }
       .mobile-panel-actions .btn {
         flex: 1;
@@ -816,6 +919,17 @@
     @media (max-width: 560px) {
       .topbar {
         align-items: flex-start;
+        width: 100vw;
+        max-width: 100vw;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .topbar > *,
+      .top-actions,
+      .mobile-panel-actions,
+      .preview-shell {
+        min-width: 0;
       }
       .brand {
         align-items: flex-start;
@@ -823,17 +937,52 @@
       .brand-title {
         font-size: 20px;
       }
-      .top-actions .btn.primary {
-        min-width: 86px;
-      }
       .top-actions {
-        margin-left: auto;
+        width: calc(100vw - 24px);
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        margin-left: 0;
       }
+      .top-actions .btn {
+        width: 100%;
+        min-width: 0;
+        padding: 0 8px;
+        font-size: 14px;
+      }
+      .top-actions-secondary {
+        display: none;
+      }
+      #download-html,
       #copy-html {
-        padding-inline: 10px;
+        display: none;
+      }
+      .preview-label {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        max-width: 100%;
+        overflow: hidden;
+      }
+      .mode-note {
+        display: none;
+      }
+      .mobile-panel-actions {
+        width: calc(100vw - 24px);
+      }
+      .mobile-panel-actions .btn {
+        width: 100%;
+        min-width: 0;
+      }
+      .preview-toolbar {
+        display: none;
       }
       .preview-card {
         justify-content: flex-start;
+      }
+      .signature-output {
+        transform: scale(0.82);
+        transform-origin: top left;
+        width: 122%;
       }
       .two {
         grid-template-columns: 1fr;
@@ -845,11 +994,12 @@
   <div class="app">
     <aside class="sidebar" id="templates-panel">
       <div class="section-title-row">
-        <h2 class="section-title">Card Designs</h2>
-        <span class="count-pill" id="design-count">100 designs</span>
+        <h2 class="section-title">Designs</h2>
+        <span class="count-pill" id="design-count">Included</span>
       </div>
+      <p class="section-subtitle">Pick a card style, then tune the details without losing email-safe HTML.</p>
       <div class="design-tools">
-        <input id="design-search" type="search" placeholder="Find a design">
+        <input id="design-search" type="search" placeholder="Search designs">
         <select id="category-filter" aria-label="Filter designs by category">
           <option value="all">All categories</option>
         </select>
@@ -868,23 +1018,29 @@
           </div>
         </div>
         <div class="top-actions">
-          <button class="btn" type="button" id="export-json">Backup</button>
-          <button class="btn" type="button" id="import-json">Import</button>
-          <button class="btn" type="button" id="download-html">Download</button>
           <button class="btn coffee" type="button" id="shuffle-card">Shuffle</button>
-          <button class="btn" type="button" id="copy-html" title="Copy HTML">HTML</button>
           <button class="btn primary" type="button" id="copy-rich">Copy</button>
+          <button class="btn" type="button" id="download-html">Download</button>
+          <button class="btn" type="button" id="copy-html" title="Copy HTML">HTML</button>
+          <span class="top-actions-secondary">
+            <button class="btn" type="button" id="export-json">Backup</button>
+            <button class="btn" type="button" id="import-json">Import</button>
+          </span>
         </div>
         <div class="mobile-panel-actions" aria-label="Mobile editing panels">
-          <button class="btn" type="button" id="mobile-open-designs">Designs <span aria-hidden="true">100</span></button>
+          <button class="btn" type="button" id="mobile-open-designs">Designs <span id="mobile-design-count" aria-hidden="true" hidden></span></button>
           <button class="btn" type="button" id="mobile-open-details">Details</button>
         </div>
       </header>
       <section class="stage">
         <div class="preview-shell">
           <div class="preview-label">
-            <span>Signature preview</span>
-            <span id="mode-note">Locked colors for email clients</span>
+            <span class="preview-heading"><span>Signature preview</span><span id="mode-note">Locked colors</span></span>
+            <div class="preview-toolbar" aria-label="Preview width">
+              <button class="preview-size active" type="button" data-preview-size="desktop">Wide</button>
+              <button class="preview-size" type="button" data-preview-size="compact">Fit</button>
+              <button class="preview-size" type="button" data-preview-size="mobile">Phone</button>
+            </div>
           </div>
           <div class="preview-card">
             <div class="signature-output" id="signature-preview"></div>
@@ -894,8 +1050,10 @@
     </main>
 
     <aside class="inspector" id="details-panel">
-      <h2 class="section-title">Details</h2>
+      <h2 class="section-title">Builder</h2>
       <form class="form-grid" id="details-form">
+        <section class="control-section">
+          <div class="control-heading"><h3>Identity</h3><span>Name, role, contact</span></div>
         <div class="field">
           <label for="name">Name</label>
           <input id="name" name="name" autocomplete="name">
@@ -907,19 +1065,6 @@
         <div class="field">
           <label for="company">Company</label>
           <input id="company" name="company">
-        </div>
-        <div class="field">
-          <label for="photo">Hosted Photo URL</label>
-          <input id="photo" name="photo" inputmode="url">
-        </div>
-        <div class="field">
-          <label>3D Avatar Library</label>
-          <div class="avatar-grid" id="avatar-grid"></div>
-        </div>
-        <div class="field">
-          <label for="photo-upload">Drag in a test image</label>
-          <div class="drop-zone" id="drop-zone" tabindex="0">Drop an image here or click to upload. Local images are stored in this browser for preview only; email recipients will not see them until you host the image and use its URL.</div>
-          <input class="hidden-file" type="file" accept="image/*" id="photo-upload">
         </div>
         <div class="field">
           <label for="logo">Logo URL or Text</label>
@@ -949,6 +1094,36 @@
           <label for="tagline">Tagline</label>
           <textarea id="tagline" name="tagline"></textarea>
         </div>
+        </section>
+
+        <section class="control-section">
+          <div class="control-heading"><h3>Image</h3><span>Avatar or hosted photo</span></div>
+        <div class="field">
+          <label>3D Avatar Library</label>
+          <div class="avatar-grid" id="avatar-grid"></div>
+        </div>
+        <div class="field">
+          <label for="photo">Hosted Photo URL</label>
+          <input id="photo" name="photo" inputmode="url">
+        </div>
+        <div class="field">
+          <label for="photo-upload">Drag in a test image</label>
+          <div class="drop-zone" id="drop-zone" tabindex="0">Drop an image here or click to upload. Local images are stored in this browser for preview only; email recipients will not see them until you host the image and use its URL.</div>
+          <input class="hidden-file" type="file" accept="image/*" id="photo-upload">
+        </div>
+        <div class="field">
+          <label for="photoStyle">Photo Shape</label>
+          <select id="photoStyle" name="photoStyle">
+            <option value="template">Use design default</option>
+            <option value="circle">Circle</option>
+            <option value="soft">Soft rounded</option>
+            <option value="square">Square</option>
+          </select>
+        </div>
+        </section>
+
+        <section class="control-section">
+          <div class="control-heading"><h3>Style</h3><span>Size, color, typography</span></div>
         <div class="two">
           <div class="field">
             <label for="accent">Accent</label>
@@ -964,16 +1139,7 @@
           </div>
         </div>
         <div class="field">
-          <label for="photoStyle">Photo Shape</label>
-          <select id="photoStyle" name="photoStyle">
-            <option value="template">Use design default</option>
-            <option value="circle">Circle</option>
-            <option value="soft">Soft rounded</option>
-            <option value="square">Square</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Design Presets</label>
+          <label>Size Presets</label>
           <div class="preset-grid" id="design-presets"></div>
         </div>
         <div class="two">
@@ -1042,6 +1208,7 @@
             </div>
           </div>
         </details>
+        </section>
         <div class="subsection">
           <div class="section-title-row">
             <h3 class="section-title">Saved Cards</h3>
@@ -1270,6 +1437,7 @@
       textColor: '#ffffff',
       fontFamily: 'Arial, Helvetica, sans-serif',
       photoSource: 'avatar',
+      previewSize: 'desktop',
       stateVersion: STATE_VERSION
     };
 
@@ -1322,6 +1490,7 @@
         const loaded = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
         const merged = { ...defaultState, ...loaded, stateVersion: STATE_VERSION };
         if (!designPresets[merged.preset]) merged.preset = defaultState.preset;
+        if (!['desktop', 'compact', 'mobile'].includes(merged.previewSize)) merged.previewSize = defaultState.previewSize;
         merged.cardWidth = Math.max(320, Math.min(760, Number(merged.cardWidth) || defaultState.cardWidth));
         merged.fontScale = Math.max(75, Math.min(128, Number(merged.fontScale) || defaultState.fontScale));
         merged.paddingScale = Math.max(55, Math.min(140, Number(merged.paddingScale) || defaultState.paddingScale));
@@ -1415,7 +1584,7 @@
       const text = state.textColor || colors().text;
       const font = state.fontFamily || 'Arial, Helvetica, sans-serif';
       let output = html
-        .replace(/width:\d+px; max-width:100%;/, `width:100%; max-width:${width}px;`)
+        .replace(/width:\d+px; max-width:100%;/, `width:100%; max-width:${width}px; table-layout:fixed;`)
         .replace(/font-family:[^;]+;/, `font-family:${font};`)
         .replace(/background:[^;"]+;/, `background:${bg};`)
         .replace(/color:[^;"]+;/, `color:${text};`);
@@ -1996,12 +2165,23 @@
         return (categoryFilter === 'all' || tpl.category === categoryFilter) &&
           (!designSearch || haystack.includes(designSearch.toLowerCase()));
       });
-      $('#design-count').textContent = `${visible.length} design${visible.length === 1 ? '' : 's'}`;
+      const filtered = Boolean(designSearch) || categoryFilter !== 'all';
+      $('#design-count').textContent = filtered ? `${matches.length} shown` : 'Included';
+      const mobileCount = $('#mobile-design-count');
+      mobileCount.textContent = filtered ? matches.length : '';
+      mobileCount.hidden = !filtered;
       list.innerHTML = matches.map((tpl) => {
+        const modeLabel = tpl.mode === 'locked-dark' ? 'Dark' : tpl.mode === 'auto' ? 'Auto' : 'Light';
         return `<button type="button" class="template-card ${tpl.id === state.template ? 'active' : ''}" data-template="${tpl.id}">
           <div class="mini-preview">${swatchHtml(tpl)}</div>
-          <div class="template-name">${escapeHtml(tpl.name)}</div>
-          <div class="template-note">${escapeHtml(tpl.category || 'Signature')} · ${escapeHtml(tpl.note)}</div>
+          <div class="template-card-top">
+            <div class="template-name">${escapeHtml(tpl.name)}</div>
+            <div class="template-meta">
+              <span class="template-chip">${escapeHtml(tpl.category || 'Signature')}</span>
+              <span class="template-chip">${modeLabel}</span>
+            </div>
+          </div>
+          <div class="template-note">${escapeHtml(tpl.note)}</div>
           <div class="template-card-actions"><span class="mini-action" data-hide-template="${tpl.id}">Hide</span></div>
         </button>`;
       }).join('') || `<div class="hint">No designs match that filter.</div>`;
@@ -2051,7 +2231,8 @@
 
     function render() {
       $('#signature-preview').innerHTML = signatureHtml();
-      $('#mode-note').textContent = state.colorMode === 'auto' ? 'Allows email client color behavior' : 'Locked colors for email clients';
+      $('#mode-note').textContent = state.colorMode === 'auto' ? 'Auto colors' : 'Locked colors';
+      renderPreviewMode();
       renderCategories();
       renderTemplates();
       renderForm();
@@ -2060,10 +2241,20 @@
 
     function updatePreviewOnly() {
       $('#signature-preview').innerHTML = signatureHtml();
-      $('#mode-note').textContent = state.colorMode === 'auto' ? 'Allows email client color behavior' : 'Locked colors for email clients';
+      $('#mode-note').textContent = state.colorMode === 'auto' ? 'Auto colors' : 'Locked colors';
+      renderPreviewMode();
       updateOutputs();
       renderAvatars();
       renderPresets();
+    }
+
+    function renderPreviewMode() {
+      const shell = document.querySelector('.preview-shell');
+      shell.classList.toggle('preview-compact', state.previewSize === 'compact');
+      shell.classList.toggle('preview-mobile', state.previewSize === 'mobile');
+      document.querySelectorAll('[data-preview-size]').forEach((button) => {
+        button.classList.toggle('active', button.dataset.previewSize === state.previewSize);
+      });
     }
 
     function updateOutputs() {
@@ -2310,6 +2501,12 @@
         state.photo = avatarButton.dataset.avatar;
         state.photoSource = 'avatar';
         render();
+      }
+      const previewButton = event.target.closest('[data-preview-size]');
+      if (previewButton) {
+        state.previewSize = previewButton.dataset.previewSize;
+        saveState();
+        renderPreviewMode();
       }
       const presetButton = event.target.closest('[data-preset]');
       if (presetButton) applyPreset(presetButton.dataset.preset);
