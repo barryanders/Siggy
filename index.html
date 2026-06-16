@@ -80,7 +80,7 @@
     }
     .app {
       display: grid;
-      grid-template-columns: 300px minmax(0, 1fr) 360px;
+      grid-template-columns: 340px minmax(0, 1fr) 360px;
       height: 100vh;
       min-height: 0;
     }
@@ -331,7 +331,7 @@
       font-weight: 750;
     }
     .mini-preview {
-      height: 96px;
+      height: 108px;
       border-radius: 10px;
       overflow: hidden;
       background: #ffffff;
@@ -341,10 +341,10 @@
     }
     .mini-preview-inner {
       position: absolute;
-      left: 8px;
-      top: 8px;
-      width: 340px;
-      transform: scale(0.62);
+      left: 10px;
+      top: 10px;
+      width: 300px;
+      transform: scale(0.9);
       transform-origin: top left;
       pointer-events: none;
     }
@@ -616,9 +616,9 @@
       width: 100%;
       min-height: 260px;
       padding: 28px;
-      border-radius: 22px;
-      background: #ffffff;
-      box-shadow: var(--shadow);
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
       display: grid;
       place-items: center;
       overflow: hidden;
@@ -1091,6 +1091,9 @@
         <select id="category-filter" aria-label="Filter designs by category">
           <option value="all">All categories</option>
         </select>
+        <select id="style-filter" aria-label="Filter designs by visual style">
+          <option value="all">All visual styles</option>
+        </select>
       </div>
       <div class="template-list" id="template-list"></div>
       <div class="sidebar-section">
@@ -1555,6 +1558,7 @@
     let hiddenDesigns = loadJson(HIDDEN_DESIGNS_KEY, []);
     let designSearch = '';
     let categoryFilter = 'all';
+    let styleFilter = 'all';
 
     const $ = (sel) => document.querySelector(sel);
     const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (char) => ({
@@ -1724,7 +1728,10 @@
       const width = Math.max(320, Math.min(760, Number(state.cardWidth) || 600));
       const fontScale = (Number(state.fontScale) || 100) / 100;
       const paddingScale = (Number(state.paddingScale) || 100) / 100;
-      const mediaScale = Math.max(0.58, Math.min(1.28, (fontScale + paddingScale) / 2));
+      const widthScale = width / 600;
+      const mediaScale = Math.max(0.70, Math.min(1.45,
+        1 + ((fontScale - 1) * 0.9) + ((paddingScale - 1) * 0.55) + ((widthScale - 1) * 0.25)
+      ));
       const radius = Math.max(0, Number(state.radius) || 0);
       const borderWidth = Math.max(0, Number(state.borderWidth) || 0);
       const borderStyle = ['solid', 'dashed', 'double'].includes(state.borderStyle) ? state.borderStyle : 'solid';
@@ -1763,24 +1770,25 @@
       output = output.replace(/(<td\b[^>]*\swidth=")(\d+)(")/g, (match, before, size, after) => {
         const numeric = Number(size);
         if (numeric > 180) return match;
-        return `${before}${scaleMedia(numeric, 36)}${after}`;
+        return `${before}${scaleMedia(numeric, 48)}${after}`;
       });
       output = output.replace(/(<img\b[^>]*\swidth=")(\d+)(" height=")(\d+)(")/g, (match, before, widthValue, middle, heightValue, after) => {
         const widthNumber = Number(widthValue);
         const heightNumber = Number(heightValue);
         if (widthNumber > 220 || heightNumber > 220) return match;
-        return `${before}${scaleMedia(widthNumber, 40)}${middle}${scaleMedia(heightNumber, 40)}${after}`;
+        return `${before}${scaleMedia(widthNumber, 52)}${middle}${scaleMedia(heightNumber, 52)}${after}`;
       });
       output = output.replace(/(width:)(\d+)(px;\s*height:)(\d+)(px;)/g, (match, beforeWidth, widthValue, middle, heightValue, afterHeight) => {
         const widthNumber = Number(widthValue);
         const heightNumber = Number(heightValue);
         if (widthNumber > 220 || heightNumber > 220) return match;
-        return `${beforeWidth}${scaleMedia(widthNumber, 40)}${middle}${scaleMedia(heightNumber, 40)}${afterHeight}`;
+        const floor = Math.min(widthNumber, heightNumber) >= 50 ? 52 : 1;
+        return `${beforeWidth}${scaleMedia(widthNumber, floor)}${middle}${scaleMedia(heightNumber, floor)}${afterHeight}`;
       });
       output = output.replace(/(line-height:)(\d+)(px;)/g, (match, before, size, after) => {
         const numeric = Number(size);
         if (numeric > 220) return match;
-        return `${before}${scaleMedia(numeric, 40)}${after}`;
+        return `${before}${scaleMedia(numeric, numeric >= 50 ? 52 : 1)}${after}`;
       });
       return output;
     }
@@ -2378,11 +2386,13 @@
       const list = $('#template-list');
       const visible = templates.filter(tpl => !hiddenDesigns.includes(tpl.id));
       const matches = visible.filter((tpl) => {
-        const haystack = `${tpl.name} ${tpl.category || ''} ${tpl.note || ''}`.toLowerCase();
+        const visualLabels = templateVisualLabels(tpl).join(' ');
+        const haystack = `${tpl.name} ${tpl.category || ''} ${tpl.family || ''} ${tpl.note || ''} ${visualLabels}`.toLowerCase();
         return (categoryFilter === 'all' || tpl.category === categoryFilter) &&
+          (styleFilter === 'all' || templateVisualTags(tpl).includes(styleFilter)) &&
           (!designSearch || haystack.includes(designSearch.toLowerCase()));
       });
-      const filtered = Boolean(designSearch) || categoryFilter !== 'all';
+      const filtered = Boolean(designSearch) || categoryFilter !== 'all' || styleFilter !== 'all';
       $('#design-count').textContent = filtered ? `${matches.length} shown` : 'Included';
       const mobileCount = $('#mobile-design-count');
       mobileCount.textContent = filtered ? matches.length : '';
@@ -2397,12 +2407,13 @@
       }
       list.innerHTML = matches.map((tpl) => {
         const modeLabel = tpl.mode === 'locked-dark' ? 'Dark' : tpl.mode === 'auto' ? 'Auto' : 'Light';
+        const visualLabel = templateVisualLabels(tpl)[0] || 'Signature';
         return `<button type="button" class="template-card ${tpl.id === state.template ? 'active' : ''}" data-template="${tpl.id}">
           <div class="mini-preview">${swatchHtml(tpl)}</div>
           <div class="template-card-top">
             <div class="template-name">${escapeHtml(tpl.name)}</div>
             <div class="template-meta">
-              <span class="template-chip">${escapeHtml(tpl.category || 'Signature')}</span>
+              <span class="template-chip">${escapeHtml(visualLabel)}</span>
               <span class="template-chip">${modeLabel}</span>
             </div>
           </div>
@@ -2411,8 +2422,50 @@
         </button>`;
       }).join('') || `<div class="empty-state">
         <strong>No designs match that search.</strong>
-        <span>Clear the search or choose another category.</span>
+        <span>Clear the search or choose another filter.</span>
       </div>`;
+    }
+
+    const visualFilterOptions = [
+      ['all', 'All visual styles'],
+      ['light', 'Light designs'],
+      ['dark', 'Dark designs'],
+      ['side-panel', 'Color side panel'],
+      ['bar', 'Top or bottom bar'],
+      ['photo-left', 'Photo on left'],
+      ['photo-right', 'Photo on right'],
+      ['minimal', 'Minimal'],
+      ['editorial', 'Editorial'],
+      ['grid', 'Grid / technical'],
+      ['soft', 'Soft rounded'],
+      ['seal', 'Seal / badge']
+    ];
+
+    function templateVisualTags(tpl) {
+      const tags = new Set([tpl.mode === 'locked-dark' ? 'dark' : 'light']);
+      const family = tpl.family || '';
+      if (family === 'split') tags.add('side-panel');
+      if (['band', 'letterhead', 'darkline'].includes(family)) tags.add('bar');
+      if (['split', 'band', 'darkline', 'editorial', 'letterhead', 'grid', 'soft', 'pill', 'minimal'].includes(family)) tags.add('photo-left');
+      if (family === 'seal') tags.add('photo-right');
+      if (family === 'minimal') tags.add('minimal');
+      if (['editorial', 'letterhead'].includes(family)) tags.add('editorial');
+      if (family === 'grid') tags.add('grid');
+      if (['soft', 'pill'].includes(family)) tags.add('soft');
+      if (family === 'seal') tags.add('seal');
+      return Array.from(tags);
+    }
+
+    function templateVisualLabels(tpl) {
+      const tags = templateVisualTags(tpl);
+      if (tags.includes('side-panel')) return ['Side panel'];
+      if (tags.includes('bar')) return ['Color bar'];
+      if (tags.includes('seal')) return ['Seal'];
+      if (tags.includes('grid')) return ['Grid'];
+      if (tags.includes('editorial')) return ['Editorial'];
+      if (tags.includes('soft')) return ['Soft'];
+      if (tags.includes('minimal')) return ['Minimal'];
+      return [tpl.category || 'Signature'];
     }
 
     function swatchHtml(tpl) {
@@ -2432,10 +2485,10 @@
         template: tpl.id,
         accent: tpl.accent,
         colorMode: tpl.mode,
-        cardWidth: 340,
-        fontScale: 76,
-        paddingScale: 44,
-        radius: 18,
+        cardWidth: 300,
+        fontScale: 72,
+        paddingScale: 58,
+        radius: 12,
         borderWidth: 1,
         borderStyle: 'solid',
         fontFamily: 'Arial, Helvetica, sans-serif',
@@ -2465,6 +2518,11 @@
       select.innerHTML = `<option value="all">All categories</option>` +
         categories.map(category => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join('');
       select.value = categoryFilter;
+      const styleSelect = $('#style-filter');
+      styleSelect.innerHTML = visualFilterOptions.map(([value, label]) =>
+        `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`
+      ).join('');
+      styleSelect.value = styleFilter;
     }
 
     function render() {
@@ -2875,6 +2933,10 @@
     });
     $('#category-filter').addEventListener('change', (event) => {
       categoryFilter = event.target.value;
+      renderTemplates();
+    });
+    $('#style-filter').addEventListener('change', (event) => {
+      styleFilter = event.target.value;
       renderTemplates();
     });
     $('#tab-templates').addEventListener('click', () => setMobilePanel('templates'));
