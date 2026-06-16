@@ -343,8 +343,8 @@
       position: absolute;
       left: 8px;
       top: 8px;
-      width: 650px;
-      transform: scale(0.36);
+      width: 340px;
+      transform: scale(0.62);
       transform-origin: top left;
       pointer-events: none;
     }
@@ -1504,6 +1504,17 @@
       { id: 'civic-office', name: 'Civic Office', category: 'Professional', family: 'letterhead', note: 'Public-service card for city, county, and civic offices.', accent: '#1d4ed8', mode: 'locked-light' }
     );
 
+    const duplicateTemplateIds = new Set([
+      'quiet-premium',
+      'accountant-ledger',
+      'attorney-classic',
+      'realtor-premium',
+      'contractor-badge'
+    ]);
+    for (let index = templates.length - 1; index >= 0; index -= 1) {
+      if (duplicateTemplateIds.has(templates[index].id)) templates.splice(index, 1);
+    }
+
     const defaultState = {
       template: 'slate-band',
       name: 'Claire Bennett',
@@ -1666,6 +1677,34 @@
 
     function templateMeta() {
       return templates.find(t => t.id === state.template) || templates[0];
+    }
+
+    function templateProfile(tpl) {
+      const id = tpl.id;
+      const category = tpl.category || '';
+      const pick = (number) => avatarProfiles[Math.max(0, Math.min(avatarProfiles.length - 1, number - 1))];
+      if (/doctor|clinic|physician|dental/i.test(id)) return pick(28);
+      if (/nurse|pediatric/i.test(id)) return pick(30);
+      if (/veterinary|vet/i.test(id)) return pick(44);
+      if (/chef|restaurant|pastry/i.test(id)) return pick(48);
+      if (/library|librarian/i.test(id)) return pick(47);
+      if (/professor|education|department|student|alumni/i.test(id) || category === 'Education') return pick(3);
+      if (/legal|law|compliance|attorney/i.test(id) || category === 'Legal') return pick(2);
+      if (/real-estate|mortgage|property|interior/i.test(id) || category === 'Real Estate') return pick(8);
+      if (/finance|wealth|bookkeeper|insurance|investor/i.test(id) || category === 'Finance') return pick(2);
+      if (/developer|tech|security|data|architect|blueprint/i.test(id) || category === 'Technical') return pick(17);
+      if (/support|help|success/i.test(id) || category === 'Support') return pick(4);
+      if (/hr|recruiter|people/i.test(id) || category === 'HR') return pick(43);
+      if (/sales|account|demo/i.test(id) || category === 'Sales') return pick(1);
+      if (/nonprofit|church|fundraiser|community|museum/i.test(id) || category === 'Nonprofit') return pick(34);
+      if (/hotel|travel|event/i.test(id) || category === 'Hospitality') return pick(5);
+      if (/electrician|plumbing|landscaping|trades/i.test(id) || category === 'Trades') return pick(15);
+      if (/fitness|wellness|therapist|coach/i.test(id) || category === 'Care') return pick(43);
+      if (/film|terminal|cyber|space/i.test(id)) return pick(25);
+      if (/medieval|wizard|royal|mapmaker|pirate/i.test(id)) return pick(8);
+      if (/creator|designer|photographer|writer|publisher|gallery/i.test(id) || category === 'Creative') return pick(1);
+      if (/friendly|sunrise/i.test(id) || category === 'Friendly') return pick(4);
+      return pick(category === 'Executive' ? 2 : 1);
     }
 
     function templateDesignDefaults(tpl) {
@@ -1981,7 +2020,10 @@
                 <div style="font-size:15px; color:#667085; padding-top:4px;">${title}</div>
                 <div style="font-size:13px; line-height:1.7; padding-top:13px;">${contactLine({ ...c, text: '#1f2937', muted: '#8a7f60' })}</div>
               </td>
-              <td width="96" align="right" valign="top"><div style="width:72px; height:72px; border-radius:50%; border:3px double ${accent}; color:${accent}; line-height:72px; text-align:center; font-size:24px; font-weight:900;">${escapeHtml((state.company || 'E').slice(0,1))}</div></td>
+              <td width="104" align="right" valign="top">
+                ${imageCell(70, 35, '#e3d6a8')}
+                <div style="width:34px; height:34px; border-radius:50%; border:3px double ${accent}; color:${accent}; line-height:30px; text-align:center; font-size:13px; font-weight:900; margin:-18px 0 0 auto; background:#fffdf4;">${escapeHtml((state.company || 'E').slice(0,1))}</div>
+              </td>
             </tr></table>
           </td></tr>
         </table>`;
@@ -2143,6 +2185,37 @@
       const line = dark ? '#334155' : '#dbe1ea';
       const contact = contactLine({ ...c, text: lightText, muted: dark ? '#64748b' : '#9aa3b2' });
 
+      if (meta.family === 'editorial') return `
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:620px; max-width:100%; background:${dark ? '#171717' : '#fffaf4'}; border:1px solid ${dark ? '#404040' : '#e6d8c5'}; border-radius:12px; font-family:Georgia, 'Times New Roman', serif; color:${dark ? '#ffffff' : '#241a12'};">
+          <tr><td style="padding:22px 24px;">
+            <div style="font-family:Arial, sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:${accent}; font-weight:900;">${company || category}</div>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:13px;"><tr>
+              <td width="92" valign="top">${imageCell(74, 8, dark ? '#525252' : '#d9c7af')}</td>
+              <td valign="top" style="padding-left:17px;">
+                <div style="font-size:30px; line-height:1.04; font-weight:700;">${name}</div>
+                <div style="font-family:Arial, sans-serif; font-size:15px; color:${dark ? '#c8c8c8' : '#766958'}; padding-top:4px;">${title}</div>
+                <div style="height:1px; background:${accent}; width:118px; margin:13px 0;"></div>
+                <div style="font-family:Arial, sans-serif; font-size:13px; line-height:1.7;">${contactLine({ ...c, text: dark ? '#ffffff' : '#241a12', muted: dark ? '#737373' : '#a3917d' })}</div>
+              </td>
+            </tr></table>
+          </td></tr>
+        </table>`;
+
+      if (meta.family === 'soft') return `
+        <table role="presentation" cellpadding="0" cellspacing="0" style="width:620px; max-width:100%; background:${dark ? '#111827' : '#fbfdf8'}; border:1px solid ${dark ? '#334155' : '#d5e2d5'}; border-radius:24px; font-family:Arial, sans-serif; color:${lightText};">
+          <tr><td style="padding:24px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+              <td width="100" valign="top">${imageCell(82, 22, dark ? '#475569' : '#c7d7c8')}</td>
+              <td valign="top" style="padding-left:18px;">
+                <div style="font-size:29px; line-height:1.05; font-weight:850; letter-spacing:-0.03em;">${name}</div>
+                <div style="font-size:15px; color:${lightMuted}; padding-top:4px;">${title}</div>
+                <div style="display:inline-block; background:${soft(accent, dark ? 0.22 : 0.12)}; color:${dark ? '#ffffff' : accent}; border-radius:999px; padding:7px 11px; margin-top:11px; font-size:12px; font-weight:800;">${company || category}</div>
+                <div style="font-size:13px; line-height:1.7; padding-top:11px;">${contact}</div>
+              </td>
+            </tr></table>
+          </td></tr>
+        </table>`;
+
       if (meta.family === 'minimal') return `
         <table role="presentation" cellpadding="0" cellspacing="0" style="width:610px; max-width:100%; background:${bg}; border:1px solid ${line}; font-family:Arial, sans-serif; color:${lightText};">
           <tr><td style="padding:22px;">
@@ -2243,7 +2316,10 @@
                 <div style="font-family:Arial, sans-serif; font-size:15px; color:${dark ? '#c9bdd8' : '#667085'}; padding-top:4px;">${title}</div>
                 <div style="font-family:Arial, sans-serif; font-size:13px; line-height:1.7; padding-top:13px;">${contactLine({ ...c, text: dark ? '#fff8db' : '#1f2937', muted: dark ? '#9f8ab4' : '#8a7f60' })}</div>
               </td>
-              <td width="92" align="right" valign="top"><div style="width:66px; height:66px; border-radius:50%; border:3px double ${accent}; color:${accent}; line-height:66px; text-align:center; font-size:24px; font-weight:900;">${escapeHtml((state.company || 'S').slice(0,1))}</div></td>
+              <td width="104" align="right" valign="top">
+                ${imageCell(70, 35, dark ? '#7c6a41' : '#e3d6a8')}
+                <div style="width:34px; height:34px; border-radius:50%; border:3px double ${accent}; color:${accent}; line-height:30px; text-align:center; font-size:13px; font-weight:900; margin:-18px 0 0 auto; background:${dark ? '#241431' : '#fffdf4'};">${escapeHtml((state.company || 'S').slice(0,1))}</div>
+              </td>
             </tr></table>
           </td></tr>
         </table>`;
@@ -2314,19 +2390,29 @@
     function swatchHtml(tpl) {
       const previous = { ...state };
       const designDefaults = templateDesignDefaults(tpl);
+      const profile = templateProfile(tpl);
       state = {
         ...state,
+        name: profile.name,
+        title: profile.title,
+        company: profile.company,
+        email: profile.email,
+        phone: profile.phone,
+        website: profile.website,
+        location: profile.location,
+        logo: profile.company,
         template: tpl.id,
         accent: tpl.accent,
         colorMode: tpl.mode,
-        cardWidth: 620,
-        fontScale: 100,
-        paddingScale: 100,
+        cardWidth: 340,
+        fontScale: 76,
+        paddingScale: 44,
         radius: 18,
         borderWidth: 1,
         borderStyle: 'solid',
         fontFamily: 'Arial, Helvetica, sans-serif',
-        photo: transparentPixel,
+        photo: profile.photo,
+        photoSource: 'avatar',
         ...designDefaults
       };
       const html = signatureHtml();
@@ -2682,9 +2768,12 @@
       if (templateButton) {
         const tpl = templates.find(t => t.id === templateButton.dataset.template);
         if (!tpl) return;
+        const profile = templateProfile(tpl);
+        const shouldUseTemplateAvatar = state.photoSource === 'avatar' && avatarPaths.includes(state.photo);
         state.template = tpl.id;
         state.accent = tpl.accent;
         state.colorMode = tpl.mode;
+        if (shouldUseTemplateAvatar) state.photo = profile.photo;
         state = { ...state, ...templateDesignDefaults(tpl) };
         render();
         document.body.classList.remove('show-templates');

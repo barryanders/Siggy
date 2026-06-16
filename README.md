@@ -40,7 +40,7 @@ Because browser storage is local, download backup copies of important signatures
 
 ## Features
 
-- 100 premade email signature card designs
+- 95 premade email signature card designs
 - 18 searchable design categories
 - Search, category filtering, hide included designs, and restore included designs
 - Editable name, title, company, photo URL, logo/text, email, phone, website, location, and tagline
