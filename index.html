@@ -430,7 +430,7 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      width: max-content;
+      width: 320px;
       transform: translate(-50%, -50%) scale(var(--mini-scale, 1));
       transform-origin: center;
       pointer-events: none;
@@ -2709,13 +2709,13 @@
           const table = inner?.querySelector('table');
           if (!inner || !table) return;
           inner.style.setProperty('--mini-scale', '1');
-          inner.style.width = 'max-content';
+          inner.style.width = '320px';
           const previewRect = preview.getBoundingClientRect();
-          const tableRect = table.getBoundingClientRect();
           const maxWidth = Math.max(1, previewRect.width - 18);
           const maxHeight = Math.max(1, previewRect.height - 18);
-          const scale = Math.min(1, maxWidth / Math.max(1, tableRect.width), maxHeight / Math.max(1, tableRect.height));
-          inner.style.width = `${Math.ceil(tableRect.width)}px`;
+          const width = Math.max(1, table.offsetWidth || 320);
+          const height = Math.max(1, table.offsetHeight || 1);
+          const scale = Math.min(1, maxWidth / width, maxHeight / height);
           inner.style.setProperty('--mini-scale', String(Math.max(0.28, scale)));
         });
       });
@@ -2784,7 +2784,11 @@
       };
       const html = signatureHtml();
       state = previous;
-      return `<div class="mini-preview-inner">${html}</div>`;
+      return `<div class="mini-preview-inner">${miniPreviewHtml(html)}</div>`;
+    }
+
+    function miniPreviewHtml(html) {
+      return html.replace(/width:100%; max-width:\d+px; table-layout:fixed;/, 'width:320px; max-width:320px; table-layout:fixed;');
     }
 
     function renderForm() {
