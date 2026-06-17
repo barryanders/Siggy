@@ -164,6 +164,17 @@
       gap: 8px;
       width: 100%;
     }
+    .action-icon {
+      display: none;
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      flex: 0 0 auto;
+    }
     .btn {
       min-height: 42px;
       padding: 0 14px;
@@ -1076,6 +1087,9 @@
       .top-actions {
         gap: 6px;
       }
+      .top-actions .action-icon {
+        display: block;
+      }
       .top-actions .btn,
       .mobile-panel-actions .btn {
         min-height: 38px;
@@ -1112,15 +1126,16 @@
     @media (max-width: 560px) {
       body.show-templates .sidebar,
       body.show-details .inspector {
-        inset: 112px 0 0;
+        inset: 62px 0 66px;
       }
       .topbar {
-        align-items: flex-start;
+        align-items: center;
         width: 100vw;
         max-width: 100vw;
         overflow: hidden;
         display: grid;
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
       }
       .topbar > *,
       .top-actions,
@@ -1129,29 +1144,35 @@
         min-width: 0;
       }
       .brand {
-        align-items: flex-start;
+        align-items: center;
       }
       .brand-title {
-        font-size: 20px;
+        font-size: 19px;
       }
       .top-actions {
-        width: calc(100vw - 24px);
-        max-width: 100%;
+        width: auto;
+        max-width: none;
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(3, 38px);
+        justify-content: end;
         margin-left: 0;
         gap: 6px;
       }
       .top-actions .btn {
-        width: 100%;
-        min-height: 36px;
+        width: 38px;
+        height: 38px;
+        min-height: 38px;
         min-width: 0;
-        padding: 0 6px;
-        font-size: 13px;
+        padding: 0;
+        border-radius: 14px;
+      }
+      .top-actions .action-label {
+        display: none;
       }
       #download-html {
         display: none;
       }
+      .mobile-panel-actions,
       body.show-templates .mobile-panel-actions,
       body.show-details .mobile-panel-actions {
         display: none;
@@ -1165,15 +1186,36 @@
       #mode-note {
         display: none;
       }
-      .mobile-panel-actions {
-        width: calc(100vw - 24px);
+      .mobile-tabs {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 15;
+        display: flex;
+        padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+        border-top: 1px solid var(--line);
+        background: color-mix(in srgb, var(--panel) 94%, transparent);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.12);
       }
-      .mobile-panel-actions .btn {
-        width: 100%;
-        min-width: 0;
+      .mobile-tabs button {
+        min-height: 42px;
+        border-radius: 14px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 850;
+      }
+      .mobile-tabs button.active {
+        background: var(--soft);
+        color: var(--text);
       }
       .preview-toolbar {
         display: none;
+      }
+      .stage {
+        padding: 14px 18px 84px;
       }
       .preview-card {
         justify-content: flex-start;
@@ -1233,10 +1275,39 @@
           </div>
         </div>
         <div class="top-actions">
-          <button class="btn coffee" type="button" id="shuffle-card">Shuffle</button>
-          <button class="btn" type="button" id="top-save-card">Save</button>
-          <button class="btn primary" type="button" id="copy-rich">Copy</button>
-          <button class="btn" type="button" id="download-html">Download</button>
+          <button class="btn coffee" type="button" id="shuffle-card" aria-label="Shuffle" title="Shuffle">
+            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M16 3h5v5"></path>
+              <path d="M4 20L21 3"></path>
+              <path d="M21 16v5h-5"></path>
+              <path d="M15 15l6 6"></path>
+              <path d="M4 4l5 5"></path>
+            </svg>
+            <span class="action-label">Shuffle</span>
+          </button>
+          <button class="btn" type="button" id="top-save-card" aria-label="Save" title="Save">
+            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"></path>
+              <path d="M17 21v-8H7v8"></path>
+              <path d="M7 3v5h8"></path>
+            </svg>
+            <span class="action-label">Save</span>
+          </button>
+          <button class="btn primary" type="button" id="copy-rich" aria-label="Copy" title="Copy">
+            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+              <rect x="4" y="4" width="11" height="11" rx="2"></rect>
+            </svg>
+            <span class="action-label">Copy</span>
+          </button>
+          <button class="btn" type="button" id="download-html" aria-label="Download" title="Download">
+            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v12"></path>
+              <path d="m7 10 5 5 5-5"></path>
+              <path d="M5 21h14"></path>
+            </svg>
+            <span class="action-label">Download</span>
+          </button>
         </div>
         <div class="mobile-panel-actions" aria-label="Mobile editing panels">
           <button class="btn" type="button" id="mobile-open-designs">Designs <span id="mobile-design-count" aria-hidden="true" hidden></span></button>
