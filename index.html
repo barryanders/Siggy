@@ -1407,9 +1407,9 @@
       full: { label: 'Full', note: 'Roomiest', cardWidth: 760, fontScale: 124, paddingScale: 132, radius: 28, borderWidth: 1 },
       large: { label: 'Large', note: 'Spacious', cardWidth: 680, fontScale: 114, paddingScale: 116, radius: 22, borderWidth: 1 },
       standard: { label: 'Standard', note: 'Balanced', cardWidth: 600, fontScale: 100, paddingScale: 100, radius: 18, borderWidth: 1 },
-      compact: { label: 'Compact', note: 'Tighter', cardWidth: 500, fontScale: 90, paddingScale: 76, radius: 14, borderWidth: 1 },
-      petite: { label: 'Petite', note: 'Small', cardWidth: 410, fontScale: 82, paddingScale: 58, radius: 10, borderWidth: 1 },
-      micro: { label: 'Micro', note: 'Tiny', cardWidth: 340, fontScale: 76, paddingScale: 44, radius: 8, borderWidth: 1 }
+      compact: { label: 'Compact', note: 'Tighter', cardWidth: 500, fontScale: 90, paddingScale: 84, radius: 14, borderWidth: 1 },
+      petite: { label: 'Petite', note: 'Small', cardWidth: 420, fontScale: 82, paddingScale: 70, radius: 10, borderWidth: 1 },
+      micro: { label: 'Micro', note: 'Tiny', cardWidth: 360, fontScale: 76, paddingScale: 60, radius: 8, borderWidth: 1 }
     };
     const avatarProfiles = [
       ['Claire Bennett', 'Creative Director', 'Brightline Studio', 'claire@brightline.example', '(555) 014-2201', 'brightline.example', 'Tulsa, OK'],
@@ -1887,7 +1887,7 @@
         return `padding:${first}px ${second}px`;
       });
       output = output.replace(/padding-left:([0-9]+)px/g, (_, size) => {
-        const scaled = Math.max(4, Math.round(Number(size) * paddingScale));
+        const scaled = Math.max(8, Math.round(Number(size) * paddingScale));
         return `padding-left:${scaled}px`;
       });
       output = output.replace(/margin:([0-9]+)px 0/g, (_, size) => {
@@ -2843,6 +2843,11 @@
       return templates.filter(t => !hiddenDesigns.includes(t.id));
     }
 
+    function shufflePresetIds() {
+      const isPhoneWidth = window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+      return isPhoneWidth ? ['compact', 'petite', 'micro'] : Object.keys(designPresets);
+    }
+
     function shuffleCard() {
       const profile = randomItem(avatarProfiles);
       const choices = visibleTemplates();
@@ -2851,7 +2856,7 @@
         return;
       }
       const tpl = randomItem(choices);
-      const presetId = randomItem(Object.keys(designPresets));
+      const presetId = randomItem(shufflePresetIds());
       const preset = designPresets[presetId];
       state = {
         ...state,
