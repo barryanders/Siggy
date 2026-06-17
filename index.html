@@ -418,7 +418,7 @@
       font-weight: 750;
     }
     .mini-preview {
-      height: 108px;
+      height: 124px;
       border-radius: 10px;
       overflow: hidden;
       background: #ffffff;
@@ -428,11 +428,11 @@
     }
     .mini-preview-inner {
       position: absolute;
-      left: 10px;
-      top: 10px;
-      width: 300px;
-      transform: scale(0.9);
-      transform-origin: top left;
+      left: 50%;
+      top: 50%;
+      width: max-content;
+      transform: translate(-50%, -50%) scale(var(--mini-scale, 1));
+      transform-origin: center;
       pointer-events: none;
     }
     .swatch-photo {
@@ -1395,6 +1395,20 @@
           </div>
         </div>
         <div class="field">
+          <label for="cardIcon">Icon</label>
+          <select id="cardIcon" name="cardIcon">
+            <option value="">No icon</option>
+            <option value="★">Star</option>
+            <option value="✓">Check</option>
+            <option value="✦">Spark</option>
+            <option value="●">Dot</option>
+            <option value="◆">Diamond</option>
+            <option value="✚">Care</option>
+            <option value="⌂">Home</option>
+            <option value="⚑">Flag</option>
+          </select>
+        </div>
+        <div class="field">
           <label>Size Presets</label>
           <div class="preset-grid" id="design-presets"></div>
         </div>
@@ -1469,6 +1483,7 @@
           <summary>HTML and backup</summary>
           <div class="action-grid">
             <button class="btn" type="button" id="panel-copy-html">Copy code</button>
+            <button class="btn" type="button" id="panel-download-image">Download image</button>
             <button class="btn" type="button" id="panel-export-json">Backup</button>
             <button class="btn" type="button" id="panel-import-json">Import</button>
           </div>
@@ -1756,6 +1771,7 @@
       website: 'brightline.example',
       location: 'Tulsa, OK',
       tagline: 'Clear communication, thoughtful design, and useful work for people who need it.',
+      cardIcon: '',
       accent: '#ef5b49',
       colorMode: 'locked-dark',
       photoStyle: 'template',
@@ -1779,7 +1795,7 @@
     const customizableFields = [
       'name', 'title', 'company', 'logo', 'email', 'phone', 'website', 'location', 'tagline',
       'photo', 'photoSource', 'photoStyle',
-      'accent', 'colorMode', 'preset', 'cardWidth', 'fontScale', 'paddingScale', 'radius',
+      'cardIcon', 'accent', 'colorMode', 'preset', 'cardWidth', 'fontScale', 'paddingScale', 'radius',
       'borderWidth', 'borderStyle', 'borderColor', 'cardBg', 'textColor', 'fontFamily'
     ];
 
@@ -1855,6 +1871,7 @@
       if (!['locked-light', 'locked-dark', 'auto'].includes(merged.colorMode)) merged.colorMode = defaultState.colorMode;
       if (!['template', 'circle', 'soft', 'square'].includes(merged.photoStyle)) merged.photoStyle = defaultState.photoStyle;
       if (!['solid', 'dashed', 'double'].includes(merged.borderStyle)) merged.borderStyle = defaultState.borderStyle;
+      if (!['', '★', '✓', '✦', '●', '◆', '✚', '⌂', '⚑'].includes(merged.cardIcon)) merged.cardIcon = defaultState.cardIcon;
       merged.customFields = Array.isArray(merged.customFields)
         ? merged.customFields.filter(field => customizableFields.includes(field))
         : [];
@@ -1941,11 +1958,14 @@
 
     function logoBlock(c, align = 'left') {
       const logo = String(state.logo || state.company || '').trim();
-      if (!logo) return '';
+      const icon = String(state.cardIcon || '').trim();
+      const iconHtml = icon ? `<span style="display:inline-block; padding-right:${logo ? '8px' : '0'}; color:${c.inverse}; font-weight:900;">${escapeHtml(icon)}</span>` : '';
+      if (!logo) return iconHtml ? `<div style="font-size:24px; line-height:1; text-align:${align};">${iconHtml}</div>` : '';
       if (/^https?:\/\//i.test(logo) || /^data:image\//i.test(logo)) {
-        return `<img src="${escapeHtml(logo)}" alt="${escapeHtml(state.company)}" style="display:block; max-width:210px; max-height:52px; margin:${align === 'center' ? '0 auto' : '0'};">`;
+        const image = `<img src="${escapeHtml(logo)}" alt="${escapeHtml(state.company)}" style="display:inline-block; vertical-align:middle; max-width:210px; max-height:52px; margin:${align === 'center' ? '0 auto' : '0'};">`;
+        return icon ? `<div style="font-size:24px; line-height:1; color:${c.inverse}; text-align:${align};">${iconHtml}${image}</div>` : image;
       }
-      return `<div style="font-size:24px; line-height:1; color:${c.inverse}; font-weight:700; letter-spacing:0.02em; text-align:${align};">${escapeHtml(logo)}</div>`;
+      return `<div style="font-size:24px; line-height:1; color:${c.inverse}; font-weight:700; letter-spacing:0.02em; text-align:${align};">${iconHtml}${escapeHtml(logo)}</div>`;
     }
 
     function templateMeta() {
@@ -2679,6 +2699,26 @@
         <strong>No designs match that search.</strong>
         <span>Clear the search or choose another filter.</span>
       </div>`;
+      fitMiniPreviews();
+    }
+
+    function fitMiniPreviews() {
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.mini-preview').forEach((preview) => {
+          const inner = preview.querySelector('.mini-preview-inner');
+          const table = inner?.querySelector('table');
+          if (!inner || !table) return;
+          inner.style.setProperty('--mini-scale', '1');
+          inner.style.width = 'max-content';
+          const previewRect = preview.getBoundingClientRect();
+          const tableRect = table.getBoundingClientRect();
+          const maxWidth = Math.max(1, previewRect.width - 18);
+          const maxHeight = Math.max(1, previewRect.height - 18);
+          const scale = Math.min(1, maxWidth / Math.max(1, tableRect.width), maxHeight / Math.max(1, tableRect.height));
+          inner.style.width = `${Math.ceil(tableRect.width)}px`;
+          inner.style.setProperty('--mini-scale', String(Math.max(0.28, scale)));
+        });
+      });
     }
 
     const visualFilterOptions = [
@@ -2945,6 +2985,88 @@
       toast('Downloaded HTML');
     }
 
+    function downloadBlob(blob, filename) {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function blobToDataUrl(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    async function inlineImagesForExport(root) {
+      await Promise.all(Array.from(root.querySelectorAll('img')).map(async (img) => {
+        const src = img.getAttribute('src');
+        if (!src || /^data:/i.test(src)) return;
+        try {
+          const response = await fetch(safeUrl(src));
+          if (!response.ok) return;
+          img.setAttribute('src', await blobToDataUrl(await response.blob()));
+        } catch {
+          // Hosted images without CORS may still work in the SVG fallback.
+        }
+      }));
+    }
+
+    async function downloadImageFile() {
+      const table = $('#signature-preview table');
+      if (!table) {
+        toast('Nothing to download');
+        return;
+      }
+      const rect = table.getBoundingClientRect();
+      const width = Math.max(1, Math.ceil(rect.width));
+      const height = Math.max(1, Math.ceil(rect.height));
+      const clone = table.cloneNode(true);
+      clone.style.margin = '0';
+      await inlineImagesForExport(clone);
+      const serialized = new XMLSerializer().serializeToString(clone);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><foreignObject width="100%" height="100%"><div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px; min-height:${height}px; background:transparent;">${serialized}</div></foreignObject></svg>`;
+      const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+      const name = (state.name || 'signature').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'signature';
+      const url = URL.createObjectURL(svgBlob);
+      const image = new Image();
+      image.onload = () => {
+        try {
+          const scale = 2;
+          const canvas = document.createElement('canvas');
+          canvas.width = width * scale;
+          canvas.height = height * scale;
+          const context = canvas.getContext('2d');
+          context.scale(scale, scale);
+          context.drawImage(image, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            URL.revokeObjectURL(url);
+            if (!blob) {
+              downloadBlob(svgBlob, `${name}-signacard.svg`);
+              toast('Downloaded SVG image');
+              return;
+            }
+            downloadBlob(blob, `${name}-signacard.png`);
+            toast('Downloaded PNG image');
+          }, 'image/png');
+        } catch {
+          URL.revokeObjectURL(url);
+          downloadBlob(svgBlob, `${name}-signacard.svg`);
+          toast('Downloaded SVG image');
+        }
+      };
+      image.onerror = () => {
+        URL.revokeObjectURL(url);
+        downloadBlob(svgBlob, `${name}-signacard.svg`);
+        toast('Downloaded SVG image');
+      };
+      image.src = url;
+    }
+
     function applyPreset(id) {
       const preset = designPresets[id];
       if (!preset) return;
@@ -3165,6 +3287,7 @@
     $('#copy-rich').addEventListener('click', copyRich);
     $('#download-html').addEventListener('click', downloadHtmlFile);
     $('#panel-copy-html').addEventListener('click', copyHtml);
+    $('#panel-download-image').addEventListener('click', downloadImageFile);
     $('#panel-export-json').addEventListener('click', downloadBackup);
     $('#panel-import-json').addEventListener('click', () => $('#json-file').click());
     $('#shuffle-card').addEventListener('click', shuffleCard);
