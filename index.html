@@ -1798,8 +1798,16 @@
       fontFamily: 'Arial, Helvetica, sans-serif',
       photoSource: 'avatar',
       previewSize: 'desktop',
+      customFields: [],
       stateVersion: STATE_VERSION
     };
+
+    const customizableFields = [
+      'name', 'title', 'company', 'logo', 'email', 'phone', 'website', 'location', 'tagline',
+      'photo', 'photoSource', 'photoStyle',
+      'accent', 'colorMode', 'preset', 'cardWidth', 'fontScale', 'paddingScale', 'radius',
+      'borderWidth', 'borderStyle', 'borderColor', 'cardBg', 'textColor', 'fontFamily'
+    ];
 
     let state = loadState();
     let savedCards = loadJson(SAVED_KEY, []);
@@ -1873,6 +1881,9 @@
       if (!['locked-light', 'locked-dark', 'auto'].includes(merged.colorMode)) merged.colorMode = defaultState.colorMode;
       if (!['template', 'circle', 'soft', 'square'].includes(merged.photoStyle)) merged.photoStyle = defaultState.photoStyle;
       if (!['solid', 'dashed', 'double'].includes(merged.borderStyle)) merged.borderStyle = defaultState.borderStyle;
+      merged.customFields = Array.isArray(merged.customFields)
+        ? merged.customFields.filter(field => customizableFields.includes(field))
+        : [];
       merged.cardWidth = clampNumber(merged.cardWidth, defaultState.cardWidth, 320, 760);
       merged.fontScale = clampNumber(merged.fontScale, defaultState.fontScale, 75, 128);
       merged.paddingScale = clampNumber(merged.paddingScale, defaultState.paddingScale, 55, 140);
@@ -1891,6 +1902,31 @@
 
     function saveHiddenDesigns() {
       localStorage.setItem(HIDDEN_DESIGNS_KEY, JSON.stringify(hiddenDesigns));
+    }
+
+    function markCustomFields(...fields) {
+      const custom = new Set(Array.isArray(state.customFields) ? state.customFields : []);
+      fields.flat().forEach((field) => {
+        if (customizableFields.includes(field)) custom.add(field);
+        if (field === 'photo') custom.add('photoSource');
+      });
+      state.customFields = Array.from(custom);
+    }
+
+    function mergeWithoutOverwritingCustomFields(current, incoming) {
+      const custom = Array.isArray(current.customFields) ? current.customFields : [];
+      const preserved = {};
+      custom.forEach((field) => {
+        if (Object.prototype.hasOwnProperty.call(incoming, field)) preserved[field] = current[field];
+      });
+      if (custom.includes('photo') && Object.prototype.hasOwnProperty.call(incoming, 'photoSource')) {
+        preserved.photoSource = current.photoSource;
+      }
+      return { ...current, ...incoming, ...preserved, customFields: custom };
+    }
+
+    function hasManualCustomizations() {
+      return Array.isArray(state.customFields) && state.customFields.length > 0;
     }
 
     function colors() {
@@ -2948,6 +2984,7 @@
     function applyPreset(id) {
       const preset = designPresets[id];
       if (!preset) return;
+      markCustomFields('preset', ...Object.keys(preset));
       state = { ...state, ...preset, preset: id };
       saveState();
       render();
@@ -2986,8 +3023,8 @@
       const tpl = randomItem(choices);
       const presetId = randomItem(shufflePresetIds());
       const preset = designPresets[presetId];
-      state = {
-        ...state,
+      const preservingEdits = hasManualCustomizations();
+      state = mergeWithoutOverwritingCustomFields(state, {
         template: tpl.id,
         name: profile.name,
         title: profile.title,
@@ -3013,9 +3050,9 @@
         borderColor: tpl.mode === 'locked-dark' ? '#334155' : '#d7dde6',
         cardBg: tpl.mode === 'locked-dark' ? '#111214' : '#ffffff',
         textColor: tpl.mode === 'locked-dark' ? '#ffffff' : '#111827'
-      };
+      });
       render();
-      toast('Shuffled card');
+      toast(preservingEdits ? 'Shuffled design, kept your edits' : 'Shuffled card');
     }
 
     function resetCard() {
@@ -3033,6 +3070,7 @@
       reader.onload = () => {
         state.photo = reader.result;
         state.photoSource = 'local';
+        markCustomFields('photo', 'photoSource');
         saveState();
         render();
         toast('Local preview image saved');
@@ -3043,6 +3081,7 @@
     document.addEventListener('input', (event) => {
       if (!event.target.name) return;
       state[event.target.name] = event.target.value;
+      markCustomFields(event.target.name);
       saveState();
       updatePreviewOnly();
     });
@@ -3077,6 +3116,13 @@
       }
       if (event.target.id === 'photo-upload' && event.target.files[0]) {
         readPhotoFile(event.target.files[0]);
+        return;
+      }
+      if (event.target.name) {
+        state[event.target.name] = event.target.value;
+        markCustomFields(event.target.name);
+        saveState();
+        updatePreviewOnly();
       }
     });
 
@@ -3109,11 +3155,13 @@
         if (!tpl) return;
         const profile = templateProfile(tpl);
         const shouldUseTemplateAvatar = state.photoSource === 'avatar' && avatarPaths.includes(state.photo);
-        state.template = tpl.id;
-        state.accent = tpl.accent;
-        state.colorMode = tpl.mode;
-        if (shouldUseTemplateAvatar) state.photo = profile.photo;
-        state = { ...state, ...templateDesignDefaults(tpl) };
+        state = mergeWithoutOverwritingCustomFields(state, {
+          template: tpl.id,
+          accent: tpl.accent,
+          colorMode: tpl.mode,
+          ...(shouldUseTemplateAvatar ? { photo: profile.photo, photoSource: 'avatar' } : {}),
+          ...templateDesignDefaults(tpl)
+        });
         render();
         document.body.classList.remove('show-templates');
       }
@@ -3121,6 +3169,7 @@
       if (avatarButton) {
         state.photo = avatarButton.dataset.avatar;
         state.photoSource = 'avatar';
+        markCustomFields('photo', 'photoSource');
         render();
       }
       const previewButton = event.target.closest('[data-preview-size]');
