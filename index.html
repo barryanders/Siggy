@@ -1110,6 +1110,10 @@
     }
 
     @media (max-width: 560px) {
+      body.show-templates .sidebar,
+      body.show-details .inspector {
+        inset: 112px 0 0;
+      }
       .topbar {
         align-items: flex-start;
         width: 100vw;
@@ -1134,16 +1138,22 @@
         width: calc(100vw - 24px);
         max-width: 100%;
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         margin-left: 0;
+        gap: 6px;
       }
       .top-actions .btn {
         width: 100%;
+        min-height: 36px;
         min-width: 0;
-        padding: 0 8px;
-        font-size: 14px;
+        padding: 0 6px;
+        font-size: 13px;
       }
       #download-html {
+        display: none;
+      }
+      body.show-templates .mobile-panel-actions,
+      body.show-details .mobile-panel-actions {
         display: none;
       }
       .preview-label {
