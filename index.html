@@ -3147,9 +3147,30 @@
     }
 
     function resetCard() {
-      state = { ...defaultState };
+      const tpl = templateMeta();
+      const profile = templateProfile(tpl);
+      state = {
+        ...defaultState,
+        template: tpl.id,
+        name: profile.name,
+        title: profile.title,
+        company: profile.company,
+        photo: profile.photo,
+        logo: profile.company,
+        email: profile.email,
+        phone: profile.phone,
+        website: profile.website,
+        location: profile.location,
+        accent: tpl.accent,
+        colorMode: tpl.mode,
+        photoSource: 'avatar',
+        previewSize: state.previewSize,
+        customFields: [],
+        ...templateDesignDefaults(tpl)
+      };
       render();
-      toast('Reset card');
+      scrollActiveTemplateIntoView();
+      toast('Reset current design');
     }
 
     function compressImageFile(file) {
