@@ -1,13 +1,16 @@
-<h1>Siggy</h1>
+<h1>
+  <img src="assets/icons/siggy-red-panda.png" alt="" width="72" height="72" align="center" style="border-radius:25%; box-shadow:0 6px 18px rgba(15, 23, 42, 0.16);">
+  Siggy
+</h1>
 
 **Siggy is a free, local-first email signature builder for creating polished HTML email signatures that feel more like business cards than generic footers.** It runs as a standalone web app, stores your drafts in your browser, and gives you copy-ready signature HTML for email clients that accept formatted paste.
 
 <p>
-  <a href="https://barryanders.github.io/SignaCard/">
+  <a href="https://barryanders.github.io/Siggy/">
     <img alt="Open Siggy" src="https://img.shields.io/badge/Open-Siggy-111827?style=for-the-badge">
   </a>
-  <a href="https://github.com/barryanders/SignaCard">
-    <img alt="Code on GitHub" src="https://img.shields.io/badge/Code-GitHub-f4c763?style=for-the-badge&logo=github&logoColor=111827&labelColor=f4c763&color=f4c763">
+  <a href="https://github.com/barryanders/Siggy">
+    <img alt="Code on GitHub" src="https://img.shields.io/badge/Code-GitHub-ffffff?style=for-the-badge&logo=github&logoColor=111827&labelColor=ffffff&color=ffffff">
   </a>
 </p>
 
@@ -26,9 +29,9 @@ Because browser storage is local, download backup copies of important signatures
 ## Features
 
 - 54 curated email signature card designs.
-- Search plus visual filters for light, dark, color, clean, and classic looks.
+- Searchable visual design library.
 - Hide included designs and restore them from tucked-away library options.
-- Editable name, title, company, email, phone, website, location, tagline, logo/text, image URL, icon, colors, borders, typography, spacing, and width.
+- Editable name, title, company, email, phone, website, location, tagline, logo/text, image URL, colors, borders, typography, spacing, and width.
 - Safe size presets plus advanced design controls.
 - 48 built-in 3D avatar choices for quick previews.
 - Drag-and-drop local image previews with browser-only compression.
