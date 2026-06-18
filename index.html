@@ -2739,14 +2739,31 @@
         </table>`;
     }
 
-    function renderTemplates() {
-      const list = $('#template-list');
+    function filteredTemplates() {
       const visible = templates.filter(tpl => !hiddenDesigns.includes(tpl.id));
       const matches = visible.filter((tpl) => {
         const haystack = `${tpl.name} ${tpl.category || ''} ${tpl.family || ''} ${tpl.note || ''}`.toLowerCase();
         return !designSearch || haystack.includes(designSearch.toLowerCase());
       });
-      const filtered = Boolean(designSearch);
+      return { visible, matches, filtered: Boolean(designSearch) };
+    }
+
+    function syncActiveTemplateCard() {
+      const current = document.querySelector('.template-card.active[data-template]');
+      if (current && current.dataset.template !== state.template) {
+        current.classList.remove('active');
+        current.setAttribute('aria-pressed', 'false');
+      }
+      const next = document.querySelector(`.template-card[data-template="${state.template}"]`);
+      if (next) {
+        next.classList.add('active');
+        next.setAttribute('aria-pressed', 'true');
+      }
+    }
+
+    function renderTemplates() {
+      const list = $('#template-list');
+      const { visible, matches, filtered } = filteredTemplates();
       $('#design-count').textContent = filtered ? `${matches.length} shown` : 'Included';
       const mobileCount = $('#mobile-design-count');
       mobileCount.textContent = filtered ? matches.length : '';
@@ -2759,8 +2776,14 @@
         </div>`;
         return;
       }
+      const renderKey = `${designSearch.toLowerCase()}::${visible.map(tpl => tpl.id).join('|')}`;
+      if (list.dataset.renderKey === renderKey) {
+        syncActiveTemplateCard();
+        return;
+      }
+      list.dataset.renderKey = renderKey;
       list.innerHTML = matches.map((tpl) => {
-        return `<button type="button" class="template-card ${tpl.id === state.template ? 'active' : ''}" data-template="${tpl.id}" aria-label="${escapeHtml(tpl.name)}" title="${escapeHtml(tpl.name)}">
+        return `<button type="button" class="template-card ${tpl.id === state.template ? 'active' : ''}" data-template="${tpl.id}" aria-label="${escapeHtml(tpl.name)}" title="${escapeHtml(tpl.name)}" aria-pressed="${String(tpl.id === state.template)}">
           <div class="mini-preview">${swatchHtml(tpl)}</div>
           <div class="template-card-actions"><span class="mini-action" data-hide-template="${tpl.id}">Hide</span></div>
         </button>`;
@@ -2769,6 +2792,7 @@
         <span>Clear the search to see every included design.</span>
       </div>`;
       fitMiniPreviews();
+      syncActiveTemplateCard();
     }
 
     function scrollActiveTemplateIntoView(behavior = 'smooth', placement = 'nearest') {
