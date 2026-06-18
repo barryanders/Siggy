@@ -1,31 +1,25 @@
-<div align="center">
-  <img src="assets/icons/siggy-red-panda.png" alt="Siggy app icon" width="88" height="88">
-  <h1>Siggy</h1>
-  <p><strong>Email signatures that feel more like business cards than generic footers.</strong></p>
-  <p>
-    A free, local-first email signature builder for creating polished HTML email signatures for Gmail, Outlook, Apple Mail, and other email clients.<br>
-    It runs as a standalone web app, stores your drafts in your browser, and gives you copy-ready signature HTML for clients that accept formatted paste.
-  </p>
-  <p>
-    <a href="https://barryanders.github.io/Siggy/">Open Siggy</a>
-    ·
-    <a href="https://github.com/barryanders/Siggy">Code on GitHub</a>
-  </p>
-  <p><sub>free to use · local-first · no account · no subscription · no ads · no tracking</sub></p>
-  <p>
-    <a href="https://buymeacoffee.com/barryanders">
-      <img alt="Give me a coffee if you'd like to say thanks" src="https://img.shields.io/badge/Say%20thanks-Give%20me%20a%20coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000000&labelColor=1f2937">
-    </a>
-  </p>
-</div>
+<img src="https://raw.githubusercontent.com/barryanders/Siggy/main/assets/icons/siggy-red-panda.png" alt="Siggy app icon" width="256" height="256">
 
----
+# Siggy
+
+<p><strong>Email signatures that feel more like business cards than generic footers.</strong></p>
+<p>
+A free, local-first email signature builder for creating polished HTML email signatures for Gmail, Outlook, Apple Mail, and other email clients.<br>
+It runs as a standalone web app, stores your drafts in your browser, and gives you copy-ready signature HTML for clients that accept formatted paste.
+</p>
+<p>
+  <a href="https://barryanders.github.io/Siggy/">Open Siggy</a>
+</p>
+<p><sub>free to use · local-first · no account · no subscription · no ads · no tracking</sub></p>
+<p>
+  <a href="https://buymeacoffee.com/barryanders">
+    <img alt="Give me a coffee if you'd like to say thanks" src="https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=fff&labelColor=1f2937">
+  </a>
+</p>
 
 ## Email Signature Cards
 
 Siggy helps you design reusable email signatures with a card-based look. It is built for people who want something more distinctive than a plain name/title footer while still keeping the generated HTML practical for Gmail, Outlook, Apple Mail, and other email clients.
-
-It works well as an email signature builder for professional email signatures, HTML email signatures, business card style signatures, team signatures, branded signatures, and reusable signature templates.
 
 Use Siggy to build signatures for executives, sales teams, support teams, HR, legal, healthcare, education, real estate, finance, creators, nonprofits, hospitality, trades, and themed personal signatures.
 
@@ -67,7 +61,7 @@ Before using a signature widely:
 3. Send test messages to Gmail, Outlook, Apple Mail, and a phone if those audiences matter.
 4. Confirm links, images, dark mode, and mobile width.
 
-> Local image uploads are only for previewing layout in this browser. Use an HTTPS-hosted image URL before installing the signature in a real email client.
+Local image uploads are only for previewing layout in this browser. Use an HTTPS-hosted image URL before installing the signature in a real email client.
 
 ## Run Locally
 
@@ -100,7 +94,7 @@ Most email signature generators produce the same few corporate layouts. Siggy fo
 ## Author
 
 <a href="https://barryanders.github.io" rel="nofollow">
-  <img alt="Barry Anders" src="https://avatars.githubusercontent.com/u/91902180?v=4&amp;s=200" width="100" height="100" style="border-radius:50%;">
+  <img alt="Barry Anders" src="https://avatars.githubusercontent.com/u/91902180?v=4&amp;s=200" width="100" height="100">
 </a>
 
 [Barry Anders](https://barryanders.github.io)
