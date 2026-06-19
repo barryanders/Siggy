@@ -3,10 +3,74 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Siggy - Email Signature Card Builder</title>
-  <meta name="description" content="Siggy is a free local email signature builder for creating customizable HTML email signatures with business-card style templates.">
+  <title>Free Email Signature Generator for Gmail, Outlook &amp; Apple Mail | Siggy</title>
+  <meta name="description" content="Create a free HTML email signature for Gmail, Outlook, Apple Mail, and other email clients. Siggy runs locally in your browser with no account, ads, or tracking.">
   <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://barryanders.github.io/Siggy/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Siggy - Free Email Signature Generator">
+  <meta property="og:description" content="Design a polished HTML email signature for Gmail, Outlook, and Apple Mail. Free, local-first, no account, no ads, no tracking.">
+  <meta property="og:url" content="https://barryanders.github.io/Siggy/">
+  <meta property="og:image" content="https://raw.githubusercontent.com/barryanders/Siggy/main/assets/icons/siggy-red-panda.png">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="assets/icons/siggy-red-panda.png?v=20260618-dock-card">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Siggy",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Any",
+        "url": "https://barryanders.github.io/Siggy/",
+        "description": "A free local-first HTML email signature generator for Gmail, Outlook, Apple Mail, and other email clients.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "HTML email signature builder",
+          "Gmail signature templates",
+          "Outlook signature templates",
+          "Apple Mail signature templates",
+          "Local browser storage",
+          "No account required"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is Siggy free?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Siggy is free to use and does not require an account, subscription, ads, or tracking."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does Siggy work with Gmail, Outlook, and Apple Mail?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Siggy exports inline, table-based HTML designed for common email clients, including Gmail, Outlook, and Apple Mail. Each email client may still adjust spacing, images, or dark mode."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are my contact details uploaded?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Siggy stores your signature settings in your own browser storage and does not upload your name, email, phone number, company, images, or saved cards to a cloud account."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
   <style>
     :root {
       --bg: #f5f6f8;
@@ -152,6 +216,14 @@
       letter-spacing: 0.12em;
       text-transform: uppercase;
     }
+    .brand-note {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: 0;
+      text-transform: none;
+    }
     .top-actions {
       display: flex;
       align-items: center;
@@ -188,6 +260,7 @@
       gap: 8px;
       white-space: nowrap;
       font-weight: 750;
+      text-decoration: none;
     }
     .btn.primary {
       background: var(--accent);
@@ -907,6 +980,113 @@
       line-height: 1.45;
       margin: 12px 0 0;
     }
+    .help-panel,
+    .coffee-panel {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(15, 23, 42, 0.44);
+      backdrop-filter: blur(10px);
+    }
+    .help-panel[hidden],
+    .coffee-panel[hidden] {
+      display: none;
+    }
+    .help-dialog,
+    .coffee-dialog {
+      width: min(760px, 100%);
+      max-height: min(760px, calc(100vh - 40px));
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+    .help-header,
+    .coffee-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .help-header h2,
+    .coffee-header h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.15;
+    }
+    .help-header p,
+    .coffee-header p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 560px;
+    }
+    .help-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 14px 20px 0;
+    }
+    .help-tab {
+      flex: 0 0 auto;
+      min-height: 38px;
+      border-radius: 999px;
+      padding: 0 12px;
+      background: var(--soft);
+      font-weight: 850;
+    }
+    .help-tab.active {
+      background: var(--accent);
+      color: var(--panel);
+    }
+    .help-content,
+    .coffee-content {
+      padding: 18px 20px 20px;
+    }
+    .help-section[hidden] {
+      display: none;
+    }
+    .help-section h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+    .help-section ol,
+    .help-section ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .help-section li + li {
+      margin-top: 8px;
+    }
+    .help-note {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 12px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .coffee-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0 20px 20px;
+    }
+    .coffee-actions .btn {
+      min-height: 44px;
+    }
     .mobile-tabs {
       display: none;
       border-top: 1px solid var(--line);
@@ -1015,6 +1195,9 @@
       .brand-subtitle {
         display: none;
       }
+      .brand-note {
+        display: none;
+      }
       .brand-mark {
         width: 38px;
         height: 38px;
@@ -1103,7 +1286,7 @@
         width: auto;
         max-width: none;
         display: grid;
-        grid-template-columns: repeat(3, 38px);
+        grid-template-columns: repeat(4, 38px);
         justify-content: end;
         margin-left: 0;
         gap: 6px;
@@ -1167,6 +1350,23 @@
       .preview-card {
         justify-content: flex-start;
       }
+      .help-panel,
+      .coffee-panel {
+        padding: 12px;
+        place-items: end stretch;
+      }
+      .help-dialog,
+      .coffee-dialog {
+        max-height: calc(100vh - 24px);
+        border-radius: 16px;
+      }
+      .help-header,
+      .coffee-header,
+      .help-content,
+      .coffee-content {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
       .signature-output {
         transform: scale(0.82);
         transform-origin: top left;
@@ -1210,7 +1410,8 @@
           <div class="brand-mark" aria-hidden="true"><img src="assets/icons/siggy-red-panda.png?v=20260618-dock-card" alt=""></div>
           <div>
             <h1 class="brand-title">Siggy</h1>
-            <p class="brand-subtitle">Email signature cards</p>
+            <p class="brand-subtitle">Free email signature generator</p>
+            <p class="brand-note">Gmail, Outlook, and Apple Mail. Free, local-first, no account.</p>
           </div>
         </div>
         <div class="top-actions">
@@ -1246,6 +1447,14 @@
               <path d="M5 21h14"></path>
             </svg>
             <span class="action-label">HTML file</span>
+          </button>
+          <button class="btn" type="button" id="open-help" aria-label="Install help" title="Install help">
+            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M9.8 9a2.4 2.4 0 0 1 4.5 1.2c0 1.8-2.3 2-2.3 3.8"></path>
+              <path d="M12 17h.01"></path>
+            </svg>
+            <span class="action-label">Help</span>
           </button>
         </div>
         <div class="mobile-panel-actions" aria-label="Mobile editing panels">
@@ -1476,6 +1685,96 @@
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <div class="help-panel" id="help-panel" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>
+    <div class="help-dialog">
+      <div class="help-header">
+        <div>
+          <h2 id="help-title">Install your email signature</h2>
+          <p>Siggy creates inline HTML signatures for Gmail, Outlook, Apple Mail, and other email clients. Always send a test email after installing.</p>
+        </div>
+        <button class="btn" type="button" id="close-help" aria-label="Close help">Close</button>
+      </div>
+      <div class="help-tabs" role="tablist" aria-label="Install help sections">
+        <button class="help-tab active" type="button" role="tab" aria-selected="true" data-help-tab="gmail">Gmail</button>
+        <button class="help-tab" type="button" role="tab" aria-selected="false" data-help-tab="outlook">Outlook</button>
+        <button class="help-tab" type="button" role="tab" aria-selected="false" data-help-tab="apple">Apple Mail</button>
+        <button class="help-tab" type="button" role="tab" aria-selected="false" data-help-tab="images">Images</button>
+        <button class="help-tab" type="button" role="tab" aria-selected="false" data-help-tab="fixes">Fixes</button>
+      </div>
+      <div class="help-content">
+        <section class="help-section" data-help-section="gmail">
+          <h3>Gmail</h3>
+          <ol>
+            <li>Choose a design, enter your details, and click Copy signature.</li>
+            <li>Open Gmail settings, then See all settings.</li>
+            <li>Find Signature, create or edit a signature, and paste.</li>
+            <li>Scroll down and save changes, then send yourself a test email.</li>
+          </ol>
+          <div class="help-note">If images do not appear, use an HTTPS-hosted image URL instead of a local preview image.</div>
+        </section>
+        <section class="help-section" data-help-section="outlook" hidden>
+          <h3>Outlook</h3>
+          <ol>
+            <li>Click Copy signature in Siggy.</li>
+            <li>Open Outlook signature settings for your account.</li>
+            <li>Paste the signature into the editor and assign it to new messages or replies.</li>
+            <li>Send a test message to Gmail and a phone before using it broadly.</li>
+          </ol>
+          <div class="help-note">Outlook may change spacing, fonts, and image handling. If the paste looks wrong, try Copy HTML or Download HTML and paste from the opened file.</div>
+        </section>
+        <section class="help-section" data-help-section="apple" hidden>
+          <h3>Apple Mail</h3>
+          <ol>
+            <li>Click Copy signature in Siggy.</li>
+            <li>Open Mail settings, then Signatures.</li>
+            <li>Create a new signature for the account and paste.</li>
+            <li>Disable default font matching if Mail replaces the styling.</li>
+          </ol>
+          <div class="help-note">Apple Mail can simplify pasted HTML. A test email is the best proof that recipients will see the layout you expect.</div>
+        </section>
+        <section class="help-section" data-help-section="images" hidden>
+          <h3>Image tips</h3>
+          <ul>
+            <li>Use a public HTTPS image URL for a real signature.</li>
+            <li>Use local image upload only to preview layout in this browser.</li>
+            <li>Keep headshots and logos small so messages load quickly.</li>
+            <li>Send test messages with images blocked and allowed.</li>
+          </ul>
+          <div class="help-note">Many email apps block remote images until the recipient allows them, so your signature should still make sense without the image.</div>
+        </section>
+        <section class="help-section" data-help-section="fixes" hidden>
+          <h3>Common fixes</h3>
+          <ul>
+            <li>If the signature is too wide, switch the preview to Phone and choose a smaller size preset.</li>
+            <li>If dark mode changes colors, try Light appearance or Dark appearance instead of Adapt to email app.</li>
+            <li>If formatting disappears, paste the copied signature into the email client's signature editor, not the plain-text message body.</li>
+            <li>If links are missing, check that website and email fields are filled in before copying.</li>
+          </ul>
+          <div class="help-note">Email clients are inconsistent. Siggy uses table-based inline HTML to avoid the most common signature problems, but every final signature still needs a real sent-message test.</div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="coffee-panel" id="coffee-panel" role="dialog" aria-modal="true" aria-labelledby="coffee-title" hidden>
+    <div class="coffee-dialog">
+      <div class="coffee-header">
+        <div>
+          <h2 id="coffee-title">Signature ready</h2>
+          <p>Siggy is free, private, and runs in your browser. If it saved you time, coffee helps keep small tools like this online.</p>
+        </div>
+        <button class="btn" type="button" id="close-coffee" aria-label="Close coffee prompt">Close</button>
+      </div>
+      <div class="coffee-content">
+        <p class="hint">No account, no tracking, no pressure. Your signature details stay in your browser.</p>
+      </div>
+      <div class="coffee-actions">
+        <a class="btn coffee" href="https://buymeacoffee.com/barryanders" target="_blank" rel="noopener">Buy me a coffee</a>
+        <button class="btn" type="button" id="maybe-later">Maybe later</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const APP_NAME = 'Siggy';
     const LEGACY_APP_NAME = 'SignaCard';
@@ -1483,6 +1782,7 @@
     const STATE_VERSION = 5;
     const SAVED_KEY = 'signacard.savedCards.v1';
     const HIDDEN_DESIGNS_KEY = 'signacard.hiddenDesigns.v1';
+    const COFFEE_PROMPT_KEY = 'siggy.coffeePromptSeen.v1';
     const MAX_LOCAL_IMAGE_BYTES = 450 * 1024;
     const MAX_LOCAL_IMAGE_DIMENSION = 900;
     const transparentPixel = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"%3E%3Crect width="1" height="1" fill="transparent"/%3E%3C/svg%3E';
@@ -3068,10 +3368,12 @@
           holder.remove();
         }
         toast('Copied signature');
+        promptForCoffee();
       } catch {
         try {
           await writeTextToClipboard(html);
           toast('Copied HTML instead');
+          promptForCoffee();
         } catch {
           toast('Could not copy signature');
         }
@@ -3098,6 +3400,7 @@
       try {
         await writeTextToClipboard(signatureHtml());
         toast('Copied HTML');
+        promptForCoffee();
       } catch {
         toast('Could not copy HTML');
       }
@@ -3109,6 +3412,44 @@
       node.classList.add('show');
       clearTimeout(toast.timer);
       toast.timer = setTimeout(() => node.classList.remove('show'), 1800);
+    }
+
+    function promptForCoffee() {
+      try {
+        if (sessionStorage.getItem(COFFEE_PROMPT_KEY)) return;
+        sessionStorage.setItem(COFFEE_PROMPT_KEY, '1');
+      } catch {
+        if (promptForCoffee.seen) return;
+        promptForCoffee.seen = true;
+      }
+      window.setTimeout(() => openCoffeePanel(), 700);
+    }
+
+    function openCoffeePanel() {
+      $('#coffee-panel').hidden = false;
+    }
+
+    function closeCoffeePanel() {
+      $('#coffee-panel').hidden = true;
+    }
+
+    function openHelpPanel() {
+      $('#help-panel').hidden = false;
+    }
+
+    function closeHelpPanel() {
+      $('#help-panel').hidden = true;
+    }
+
+    function showHelpSection(id) {
+      document.querySelectorAll('[data-help-tab]').forEach((button) => {
+        const active = button.dataset.helpTab === id;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-selected', String(active));
+      });
+      document.querySelectorAll('[data-help-section]').forEach((section) => {
+        section.hidden = section.dataset.helpSection !== id;
+      });
     }
 
     function downloadBackup() {
@@ -3139,6 +3480,7 @@
       link.click();
       URL.revokeObjectURL(link.href);
       toast('Downloaded HTML file');
+      promptForCoffee();
     }
 
     function downloadBlob(blob, filename) {
@@ -3204,21 +3546,25 @@
             if (!blob) {
               downloadBlob(svgBlob, `${name}-siggy.svg`);
               toast('Downloaded SVG image');
+              promptForCoffee();
               return;
             }
             downloadBlob(blob, `${name}-siggy.png`);
             toast('Downloaded PNG image');
+            promptForCoffee();
           }, 'image/png');
         } catch {
           URL.revokeObjectURL(url);
           downloadBlob(svgBlob, `${name}-siggy.svg`);
           toast('Downloaded SVG image');
+          promptForCoffee();
         }
       };
       image.onerror = () => {
         URL.revokeObjectURL(url);
         downloadBlob(svgBlob, `${name}-siggy.svg`);
         toast('Downloaded SVG image');
+        promptForCoffee();
       };
       image.src = url;
     }
@@ -3522,6 +3868,24 @@
     $('#panel-download-image').addEventListener('click', downloadImageFile);
     $('#panel-export-json').addEventListener('click', downloadBackup);
     $('#panel-import-json').addEventListener('click', () => $('#json-file').click());
+    $('#open-help').addEventListener('click', openHelpPanel);
+    $('#close-help').addEventListener('click', closeHelpPanel);
+    $('#close-coffee').addEventListener('click', closeCoffeePanel);
+    $('#maybe-later').addEventListener('click', closeCoffeePanel);
+    $('#help-panel').addEventListener('click', (event) => {
+      if (event.target.id === 'help-panel') closeHelpPanel();
+    });
+    $('#coffee-panel').addEventListener('click', (event) => {
+      if (event.target.id === 'coffee-panel') closeCoffeePanel();
+    });
+    document.querySelectorAll('[data-help-tab]').forEach((button) => {
+      button.addEventListener('click', () => showHelpSection(button.dataset.helpTab));
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      closeHelpPanel();
+      closeCoffeePanel();
+    });
     $('#shuffle-card').addEventListener('click', shuffleCard);
     $('#top-save-card').addEventListener('click', saveCurrentCard);
     $('#save-card').addEventListener('click', saveCurrentCard);
