@@ -980,7 +980,6 @@
       line-height: 1.45;
       margin: 12px 0 0;
     }
-    .help-panel,
     .coffee-panel {
       position: fixed;
       inset: 0;
@@ -991,11 +990,9 @@
       background: rgba(15, 23, 42, 0.44);
       backdrop-filter: blur(10px);
     }
-    .help-panel[hidden],
     .coffee-panel[hidden] {
       display: none;
     }
-    .help-dialog,
     .coffee-dialog {
       width: min(760px, 100%);
       max-height: min(760px, calc(100vh - 40px));
@@ -1006,7 +1003,6 @@
       color: var(--text);
       box-shadow: var(--shadow);
     }
-    .help-header,
     .coffee-header {
       display: flex;
       align-items: flex-start;
@@ -1015,13 +1011,11 @@
       padding: 20px;
       border-bottom: 1px solid var(--line);
     }
-    .help-header h2,
     .coffee-header h2 {
       margin: 0;
       font-size: 20px;
       line-height: 1.15;
     }
-    .help-header p,
     .coffee-header p {
       margin: 6px 0 0;
       color: var(--muted);
@@ -1029,54 +1023,8 @@
       line-height: 1.45;
       max-width: 560px;
     }
-    .help-tabs {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding: 14px 20px 0;
-    }
-    .help-tab {
-      flex: 0 0 auto;
-      min-height: 38px;
-      border-radius: 999px;
-      padding: 0 12px;
-      background: var(--soft);
-      font-weight: 850;
-    }
-    .help-tab.active {
-      background: var(--accent);
-      color: var(--panel);
-    }
-    .help-content,
     .coffee-content {
       padding: 18px 20px 20px;
-    }
-    .help-section[hidden] {
-      display: none;
-    }
-    .help-section h3 {
-      margin: 0 0 10px;
-      font-size: 15px;
-    }
-    .help-section ol,
-    .help-section ul {
-      margin: 0;
-      padding-left: 20px;
-      color: var(--text);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-    .help-section li + li {
-      margin-top: 8px;
-    }
-    .help-note {
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 12px;
-      background: var(--soft);
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.45;
     }
     .coffee-actions {
       display: flex;
@@ -1352,19 +1300,15 @@
       .preview-card {
         justify-content: flex-start;
       }
-      .help-panel,
       .coffee-panel {
         padding: 12px;
         place-items: end stretch;
       }
-      .help-dialog,
       .coffee-dialog {
         max-height: calc(100vh - 24px);
         border-radius: 16px;
       }
-      .help-header,
       .coffee-header,
-      .help-content,
       .coffee-content {
         padding-left: 16px;
         padding-right: 16px;
@@ -1449,14 +1393,6 @@
               <path d="M5 21h14"></path>
             </svg>
             <span class="action-label">HTML file</span>
-          </button>
-          <button class="btn" type="button" id="open-help" aria-label="Install help" title="Install help">
-            <svg class="action-icon" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"></circle>
-              <path d="M9.8 9a2.4 2.4 0 0 1 4.5 1.2c0 1.8-2.3 2-2.3 3.8"></path>
-              <path d="M12 17h.01"></path>
-            </svg>
-            <span class="action-label">Help</span>
           </button>
         </div>
         <div class="mobile-panel-actions" aria-label="Mobile editing panels">
@@ -1686,66 +1622,6 @@
     </nav>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <div class="help-panel" id="help-panel" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>
-    <div class="help-dialog">
-      <div class="help-header">
-        <div>
-          <h2 id="help-title">Install your email signature</h2>
-          <p>Siggy creates inline HTML signatures for Gmail, Outlook, Apple Mail, and other email clients. Always send a test email after installing.</p>
-        </div>
-        <button class="btn" type="button" id="close-help" aria-label="Close help">Close</button>
-      </div>
-      <div class="help-tabs" role="tablist" aria-label="Install help sections">
-        <button class="help-tab active" type="button" role="tab" aria-selected="true" data-help-tab="gmail">Gmail</button>
-        <button class="help-tab" type="button" role="tab" aria-selected="false" data-help-tab="outlook">Outlook</button>
-        <button class="help-tab" type="button" role="tab" aria-selected="false" data-help-tab="apple">Apple Mail</button>
-        <button class="help-tab" type="button" role="tab" aria-selected="false" data-help-tab="images">Images</button>
-      </div>
-      <div class="help-content">
-        <section class="help-section" data-help-section="gmail">
-          <h3>Gmail</h3>
-          <ol>
-            <li>Choose a design, enter your details, and click Copy signature.</li>
-            <li>Open Gmail settings, then See all settings.</li>
-            <li>Find Signature, create or edit a signature, and paste.</li>
-            <li>Scroll down and save changes, then send yourself a test email.</li>
-          </ol>
-          <div class="help-note">If images do not appear, use an HTTPS-hosted image URL instead of a local preview image.</div>
-        </section>
-        <section class="help-section" data-help-section="outlook" hidden>
-          <h3>Outlook</h3>
-          <ol>
-            <li>Click Copy signature in Siggy.</li>
-            <li>Open Outlook signature settings for your account.</li>
-            <li>Paste the signature into the editor and assign it to new messages or replies.</li>
-            <li>Send a test message to Gmail and a phone before using it broadly.</li>
-          </ol>
-          <div class="help-note">Outlook may change spacing, fonts, and image handling. If the paste looks wrong, try Copy HTML or Download HTML and paste from the opened file.</div>
-        </section>
-        <section class="help-section" data-help-section="apple" hidden>
-          <h3>Apple Mail</h3>
-          <ol>
-            <li>Click Copy signature in Siggy.</li>
-            <li>Open Mail settings, then Signatures.</li>
-            <li>Create a new signature for the account and paste.</li>
-            <li>Disable default font matching if Mail replaces the styling.</li>
-          </ol>
-          <div class="help-note">Apple Mail can simplify pasted HTML. A test email is the best proof that recipients will see the layout you expect.</div>
-        </section>
-        <section class="help-section" data-help-section="images" hidden>
-          <h3>Image tips</h3>
-          <ul>
-            <li>Use a public HTTPS image URL for a real signature.</li>
-            <li>Use local image upload only to preview layout in this browser.</li>
-            <li>Keep headshots and logos small so messages load quickly.</li>
-            <li>Send test messages with images blocked and allowed.</li>
-          </ul>
-          <div class="help-note">Many email apps block remote images until the recipient allows them, so your signature should still make sense without the image.</div>
-        </section>
-      </div>
-    </div>
-  </div>
 
   <div class="coffee-panel" id="coffee-panel" role="dialog" aria-modal="true" aria-labelledby="coffee-title" hidden>
     <div class="coffee-dialog">
@@ -3424,25 +3300,6 @@
       $('#coffee-panel').hidden = true;
     }
 
-    function openHelpPanel() {
-      $('#help-panel').hidden = false;
-    }
-
-    function closeHelpPanel() {
-      $('#help-panel').hidden = true;
-    }
-
-    function showHelpSection(id) {
-      document.querySelectorAll('[data-help-tab]').forEach((button) => {
-        const active = button.dataset.helpTab === id;
-        button.classList.toggle('active', active);
-        button.setAttribute('aria-selected', String(active));
-      });
-      document.querySelectorAll('[data-help-section]').forEach((section) => {
-        section.hidden = section.dataset.helpSection !== id;
-      });
-    }
-
     function downloadBackup() {
       const data = JSON.stringify({
         app: APP_NAME,
@@ -3859,22 +3716,13 @@
     $('#panel-download-image').addEventListener('click', downloadImageFile);
     $('#panel-export-json').addEventListener('click', downloadBackup);
     $('#panel-import-json').addEventListener('click', () => $('#json-file').click());
-    $('#open-help').addEventListener('click', openHelpPanel);
-    $('#close-help').addEventListener('click', closeHelpPanel);
     $('#close-coffee').addEventListener('click', closeCoffeePanel);
     $('#maybe-later').addEventListener('click', closeCoffeePanel);
-    $('#help-panel').addEventListener('click', (event) => {
-      if (event.target.id === 'help-panel') closeHelpPanel();
-    });
     $('#coffee-panel').addEventListener('click', (event) => {
       if (event.target.id === 'coffee-panel') closeCoffeePanel();
     });
-    document.querySelectorAll('[data-help-tab]').forEach((button) => {
-      button.addEventListener('click', () => showHelpSection(button.dataset.helpTab));
-    });
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
-      closeHelpPanel();
       closeCoffeePanel();
     });
     $('#shuffle-card').addEventListener('click', shuffleCard);
