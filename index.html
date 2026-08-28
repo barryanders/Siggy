@@ -232,6 +232,19 @@
       flex-wrap: wrap;
       justify-content: flex-end;
     }
+    .product-support {
+      display: grid;
+      gap: 8px;
+      margin-top: 4px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+    .product-support .btn {
+      width: max-content;
+    }
+    .product-support .hint {
+      margin: 0;
+    }
     .mobile-panel-actions {
       display: none;
       gap: 8px;
@@ -1592,6 +1605,10 @@
             <textarea class="html-output" id="html-output" readonly spellcheck="false"></textarea>
           </div>
           <p class="hint">Siggy exports inline, table-based HTML for email clients. Local images are previews only, and the image download may use SVG fallback when a browser blocks PNG rendering.</p>
+          <div class="product-support">
+            <a class="btn" href="https://goodburrow.com/report/?app=siggy&amp;name=Siggy&amp;version=1.0.0&amp;os=Web%20browser" target="_blank" rel="noopener">Report a problem</a>
+            <p class="hint">No signature details, images, or saved cards are attached.</p>
+          </div>
         </details>
       </form>
       <input class="hidden-file" type="file" accept="application/json" id="json-file">

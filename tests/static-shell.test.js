@@ -55,3 +55,10 @@ test('starter signature uses the current calm professional example', () => {
   assert.match(html, /photoSource: 'none'/);
   assert.doesNotMatch(html, /template: 'slate-band',\s*name: 'Claire Bennett'/);
 });
+
+test('details panel links to the privacy-safe problem report form', () => {
+  const html = read('index.html');
+
+  assert.match(html, /goodburrow\.com\/report\/\?app=siggy&amp;name=Siggy&amp;version=1\.0\.0/);
+  assert.match(html, /No signature details, images, or saved cards are attached/);
+});
