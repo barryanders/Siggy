@@ -1,8 +1,8 @@
-<img src="https://raw.githubusercontent.com/GoodBurrow/Siggy/main/assets/icons/siggy-app-icon.png" alt="Siggy app icon" width="256" height="256">
+<img src="https://raw.githubusercontent.com/barryanders/Siggy/main/assets/icons/siggy-app-icon.png" alt="Siggy app icon" width="256" height="256">
 
 # Siggy
 
-Made by [Good Burrow](https://goodburrow.github.io/).
+Made by [Anders](https://barryanders.github.io/).
 
 <p><strong>Build a professional email signature you can copy into Gmail, Outlook, or Apple Mail.</strong></p>
 <p>
@@ -10,11 +10,11 @@ A free, local-first email signature builder for creating polished HTML email sig
 It runs as a standalone web app, stores your drafts in your browser, and gives you copy-ready signature HTML for clients that accept formatted paste.
 </p>
 <p>
-  <a href="https://goodburrow.github.io/Siggy/">Open Siggy</a>
+  <a href="https://barryanders.github.io/Siggy/">Open Siggy</a>
 </p>
 <p><sub>free to use · local-first · no account · no subscription · no ads · no tracking</sub></p>
 <p>
-  <a href="https://goodburrow.github.io/">From Good Burrow</a>
+  <a href="https://barryanders.github.io/">From Anders</a>
 </p>
 
 ## Email Signature Cards
@@ -102,3 +102,7 @@ Most email signature generators produce the same few corporate layouts. Siggy fo
 ## License
 
 MIT
+
+## Support
+
+This project is free. If you find it useful, you can [buy me a coffee](https://buymeacoffee.com/barryanders). Donations are optional and do not unlock features.
