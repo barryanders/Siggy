@@ -19,6 +19,8 @@ It runs as a standalone web app, stores your drafts in your browser, and gives y
 
 ## Screenshots
 
+Real app captures. [Explore the full-size showcase](https://barryanders.github.io/products/siggy/).
+
 ![Signature builder with sample contact details](docs/screenshots/signature-builder.jpg)
 
 ## Email Signature Cards
