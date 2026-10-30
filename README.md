@@ -23,6 +23,9 @@ Real app captures. [Explore the full-size showcase](https://barryanders.github.i
 
 ![Signature builder with sample contact details](docs/screenshots/signature-builder.jpg)
 
+![Warm signature design with a built-in avatar](docs/screenshots/sunrise-design.jpg)
+
+
 ## Email Signature Cards
 
 Siggy helps you design reusable email signatures with a card-based look. It is built for people who want something more distinctive than a plain name/title footer while still keeping the generated HTML practical for Gmail, Outlook, Apple Mail, and other email clients.
